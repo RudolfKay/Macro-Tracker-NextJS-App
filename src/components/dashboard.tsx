@@ -43,6 +43,14 @@ export function Dashboard() {
     calories: 2000,
   })
 
+  // Temporary state for editing macro goals
+  const [editingGoals, setEditingGoals] = useState<MacroGoals>({
+    protein: 150,
+    carbs: 200,
+    fat: 65,
+    calories: 2000,
+  })
+
   const [foodEntries, setFoodEntries] = useState<FoodEntry[]>([
     {
       id: "1",
@@ -86,6 +94,25 @@ export function Dashboard() {
       })
     )
   }, [])
+
+  // Initialize editing goals when dialog opens
+  const handleOpenEditGoals = (open: boolean) => {
+    setIsEditingGoals(open)
+    if (open) {
+      setEditingGoals({ ...macroGoals })
+    }
+  }
+
+  // Save changes and close dialog
+  const handleSaveGoals = () => {
+    setMacroGoals({ ...editingGoals })
+    setIsEditingGoals(false)
+  }
+
+  // Helper function to calculate capped percentage
+  const calculateCappedPercentage = (current: number, goal: number): number => {
+    return Math.min((current / goal) * 100, 100)
+  }
 
   // Calculate totals
   const totals = foodEntries.reduce(
@@ -146,7 +173,7 @@ export function Dashboard() {
               </CardTitle>
               <CardDescription>Your personalized nutrition targets</CardDescription>
             </div>
-            <Dialog open={isEditingGoals} onOpenChange={setIsEditingGoals}>
+            <Dialog open={isEditingGoals} onOpenChange={handleOpenEditGoals}>
               <DialogTrigger asChild>
                 <Button variant="outline" size="sm">
                   <Edit2 className="h-4 w-4 mr-2" />
@@ -165,9 +192,9 @@ export function Dashboard() {
                       <Input
                         id="protein-goal"
                         type="number"
-                        value={macroGoals.protein}
+                        value={editingGoals.protein}
                         onChange={(e) =>
-                          setMacroGoals({ ...macroGoals, protein: Number.parseInt(e.target.value) || 0 })
+                          setEditingGoals({ ...editingGoals, protein: Number.parseInt(e.target.value) || 0 })
                         }
                       />
                     </div>
@@ -176,8 +203,8 @@ export function Dashboard() {
                       <Input
                         id="carbs-goal"
                         type="number"
-                        value={macroGoals.carbs}
-                        onChange={(e) => setMacroGoals({ ...macroGoals, carbs: Number.parseInt(e.target.value) || 0 })}
+                        value={editingGoals.carbs}
+                        onChange={(e) => setEditingGoals({ ...editingGoals, carbs: Number.parseInt(e.target.value) || 0 })}
                       />
                     </div>
                   </div>
@@ -187,8 +214,8 @@ export function Dashboard() {
                       <Input
                         id="fat-goal"
                         type="number"
-                        value={macroGoals.fat}
-                        onChange={(e) => setMacroGoals({ ...macroGoals, fat: Number.parseInt(e.target.value) || 0 })}
+                        value={editingGoals.fat}
+                        onChange={(e) => setEditingGoals({ ...editingGoals, fat: Number.parseInt(e.target.value) || 0 })}
                       />
                     </div>
                     <div>
@@ -196,16 +223,19 @@ export function Dashboard() {
                       <Input
                         id="calories-goal"
                         type="number"
-                        value={macroGoals.calories}
+                        value={editingGoals.calories}
                         onChange={(e) =>
-                          setMacroGoals({ ...macroGoals, calories: Number.parseInt(e.target.value) || 0 })
+                          setEditingGoals({ ...editingGoals, calories: Number.parseInt(e.target.value) || 0 })
                         }
                       />
                     </div>
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button onClick={() => setIsEditingGoals(false)}>Save Changes</Button>
+                  <Button variant="outline" onClick={() => setIsEditingGoals(false)}>
+                    Cancel
+                  </Button>
+                  <Button onClick={handleSaveGoals}>Save Changes</Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
@@ -249,7 +279,7 @@ export function Dashboard() {
                 </span>
                 <span>{Math.round((totals.protein / macroGoals.protein) * 100)}%</span>
               </div>
-              <Progress value={(totals.protein / macroGoals.protein) * 100} className="h-2" />
+              <Progress value={calculateCappedPercentage(totals.protein, macroGoals.protein)} className="h-2" />
             </div>
             <div>
               <div className="flex justify-between text-sm mb-2">
@@ -258,7 +288,7 @@ export function Dashboard() {
                 </span>
                 <span>{Math.round((totals.carbs / macroGoals.carbs) * 100)}%</span>
               </div>
-              <Progress value={(totals.carbs / macroGoals.carbs) * 100} className="h-2" />
+              <Progress value={calculateCappedPercentage(totals.carbs, macroGoals.carbs)} className="h-2" />
             </div>
             <div>
               <div className="flex justify-between text-sm mb-2">
@@ -267,7 +297,7 @@ export function Dashboard() {
                 </span>
                 <span>{Math.round((totals.fat / macroGoals.fat) * 100)}%</span>
               </div>
-              <Progress value={(totals.fat / macroGoals.fat) * 100} className="h-2" />
+              <Progress value={calculateCappedPercentage(totals.fat, macroGoals.fat)} className="h-2" />
             </div>
             <div>
               <div className="flex justify-between text-sm mb-2">
@@ -276,7 +306,7 @@ export function Dashboard() {
                 </span>
                 <span>{Math.round((totals.calories / macroGoals.calories) * 100)}%</span>
               </div>
-              <Progress value={(totals.calories / macroGoals.calories) * 100} className="h-2" />
+              <Progress value={calculateCappedPercentage(totals.calories, macroGoals.calories)} className="h-2" />
             </div>
           </CardContent>
         </Card>
