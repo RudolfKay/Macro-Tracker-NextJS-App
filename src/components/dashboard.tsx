@@ -1,6 +1,8 @@
 "use client"
 import { useState, useEffect } from "react"
-import { Plus, Target, Utensils, TrendingUp, Edit2, Trash2 } from "lucide-react"
+import { Plus, Target, Utensils, TrendingUp, Edit2, Trash2, LogOut, User } from "lucide-react"
+import { signOut, useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -16,6 +18,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { ModeToggle } from "@/components/mode-toggle"
 
 interface MacroGoals {
@@ -36,6 +46,9 @@ interface FoodEntry {
 }
 
 export function Dashboard() {
+  const { data: session } = useSession();
+  const router = useRouter();
+  
   const [macroGoals, setMacroGoals] = useState<MacroGoals>({
     protein: 150,
     carbs: 200,
@@ -109,6 +122,12 @@ export function Dashboard() {
     setIsEditingGoals(false)
   }
 
+  // Handle logout
+  const handleLogout = async () => {
+    await signOut({ redirect: false });
+    router.push("/login");
+  };
+
   // Helper function to calculate capped percentage
   const calculateCappedPercentage = (current: number, goal: number): number => {
     return Math.min((current / goal) * 100, 100)
@@ -160,6 +179,22 @@ export function Dashboard() {
               <p className="text-sm text-muted-foreground">Today</p>
               <p className="text-lg font-semibold">{currentDate}</p>
             </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <User className="h-4 w-4 mr-2" />
+                  {session?.user?.name || "User"}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Sign Out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
 
