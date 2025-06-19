@@ -14,14 +14,16 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
+  id           String      @id @default(uuid())
+  name         String
+  email        String      @unique
+  password     String
+  createdAt    DateTime    @default(now())
   profileImage String? // Path to profile photo
-  accounts  Account[]
-  sessions  Session[]
+  accounts     Account[]
+  sessions     Session[]
+  macroGoals   MacroGoal[]
+  foodEntries  FoodEntry[]
 }
 
 model Account {
@@ -56,4 +58,31 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model MacroGoal {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  protein   Int
+  carbs     Int
+  fat       Int
+  calories  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isActive  Boolean  @default(true)
+}
+
+model FoodEntry {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  name      String
+  protein   Int
+  carbs     Int
+  fat       Int
+  calories  Int
+  time      String
+  date      DateTime
+  createdAt DateTime @default(now())
 }

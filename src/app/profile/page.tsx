@@ -143,13 +143,13 @@ const ProfilePage = () => {
         </div>
         <Card className="w-full max-w-md mx-auto p-6 flex flex-col items-center gap-6">
           <CardHeader className="flex flex-col items-center gap-2">
-            <div className="relative group cursor-pointer" onClick={handlePhotoClick} tabIndex={0} aria-label="Change profile photo">
+            <div className="relative group cursor-pointer bg-white dark:bg-white rounded-full w-[111px] h-[111px] flex items-center justify-center" onClick={handlePhotoClick} tabIndex={0} aria-label="Change profile photo">
               <Image
                 src={preview || (session.user as any)?.profileImage || session.user.image || "/avatar.svg"}
                 alt="Profile photo"
                 width={111}
                 height={111}
-                className={`rounded-full border-4 border-emerald-200 shadow-md object-cover object-center transition group-hover:opacity-80 w-[111px] h-[111px]${isDefaultAvatar ? " opacity-50" : ""}`}
+                className={`rounded-full border-4 border-emerald-400 shadow-md object-cover object-center transition group-hover:opacity-80 w-[111px] h-[111px]${isDefaultAvatar ? " opacity-50" : ""}`}
                 onError={handleImageError}
                 tabIndex={0}
                 aria-label="User profile photo"
