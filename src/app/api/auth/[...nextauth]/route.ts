@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "../../../../lib/prisma";
-// import bcrypt from 'bcryptjs'; TODO
+import bcrypt from "bcryptjs";
 
 const handler = NextAuth({
   providers: [
@@ -20,11 +20,10 @@ const handler = NextAuth({
           where: { email: credentials.email },
         });
 
-        // TODO: Hashing. Compare with bcrypt
-        // const isValid = user && await bcrypt.compare(credentials.password, user.password);
-        // if (!isValid) return null;
+        const isValid = user && await bcrypt.compare(credentials.password, user.password);
+        if (!isValid) return null;
 
-        if (user && user.password === credentials.password) {
+        if (user) {
           return {
             id: user.id,
             name: user.name,

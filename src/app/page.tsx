@@ -61,16 +61,16 @@ export default function Home() {
         </div>
       </header>
       <main className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
+        <section className="w-full py-12 md:py-16 lg:py-20 xl:py-24">
           <div className="container px-4 md:px-6">
             <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
-              <div className="flex flex-col justify-center space-y-4">
-                <div className="space-y-2">
+              <div className="flex flex-col justify-center items-center text-center space-y-4">
+                <div className="space-y-4">
                   <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
                     Track Your Macros, Achieve Your Goals
                   </h1>
-                  <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                    The smart way to monitor your nutrition. Personalized macro tracking that adapts to your lifestyle
+                  <p className="text-muted-foreground md:text-xl">
+                    The smart way to monitor your nutrition. <br></br>Personalized macro tracking that adapts to your lifestyle
                     and fitness goals.
                   </p>
                 </div>
