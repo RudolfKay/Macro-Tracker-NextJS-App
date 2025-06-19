@@ -86,10 +86,10 @@ export default function Home() {
                 </div>
               </div>
               <Image
-                src="/placeholder.svg?height=550&width=550"
+                src="/food-hero.jpg"
                 width={550}
                 height={550}
-                alt="Hero Image"
+                alt="Landing Page Image"
                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover sm:w-full lg:order-last lg:aspect-square"
               />
             </div>
