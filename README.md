@@ -1,36 +1,104 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Macro Tracker Next.js App
+
+A modern, full-stack macro-tracking application built with Next.js, React, TypeScript, Prisma ORM, PostgreSQL, NextAuth.js, and styled with TailwindCSS and Shadcn UI components.
+
+## Features
+- User authentication (NextAuth.js)
+- Profile management with photo upload
+- Set and track daily macro goals (protein, carbs, fat, calories)
+- Log food entries with nutritional breakdown
+- Dashboard with progress visualization
+- Responsive, accessible UI
+
+---
+
+## Architecture
+
+All access to user-specific data (macros, food entries, etc.) is protected by authentication. The app checks authentication using NextAuth.js before allowing any Prisma/database queries. Only authenticated users can access or modify their data.
+
+```mermaid
+graph TD
+  A["Client (Browser)"] -->|"HTTP"| B["Next.js App (API Routes & Pages)"]
+  B -->|"Auth Check (NextAuth.js)"| C["Authentication"]
+  C -->|"If Authenticated"| D["Prisma Client"]
+  D -->|"SQL"| E["PostgreSQL Database"]
+  B --> F["UI Components (React, TailwindCSS, Shadcn)"]
+```
+
+- **Next.js App**: Handles all API requests and page rendering.
+- **Authentication (NextAuth.js)**: Ensures only authenticated users can access protected data.
+- **Prisma Client**: Used by the app to query and mutate data in the database, only after authentication.
+- **PostgreSQL Database**: Stores all persistent data (users, macros, food entries, etc.).
+- **UI Components**: Rendered by the app for the client.
+
+---
 
 ## Getting Started
 
-First, run the development server:
-
+### 1. Clone the repository
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <https://github.com/RudolfKay/Macro-Tracker-NextJS-App.git>
+cd Macro-Tracker-NextJS-App
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install dependencies
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Set up environment variables
+- Copy the example env file:
+  ```bash
+  cp .env.example .env
+  ```
+- Fill in the required values in `.env`:
+  - `DATABASE_URL` (your PostgreSQL connection string)
+  - `NEXTAUTH_URL` (e.g., http://localhost:3000 for local dev)
+  - `NEXTAUTH_SECRET` (generate with `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4. Set up the database
+- Ensure PostgreSQL is running and accessible.
+- Run migrations and generate the Prisma client:
+  ```bash
+  npx prisma migrate dev
+  # or for production
+  # npx prisma migrate deploy
+  ```
 
-## Learn More
+### 5. Start the development server
+```bash
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Usage
+- Register a new account or log in.
+- Set your daily macro goals.
+- Add food entries throughout the day.
+- View your progress and adjust goals as needed.
+- Manage your profile and photo.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Scripts
+- `npm run dev` — Start the development server
+- `npm run build` — Build for production
+- `npm run start` — Start the production server
+- `npx prisma migrate dev` — Run migrations and create the database (dev)
+- `npx prisma generate` — Generate Prisma client
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## Contributing
+1. Fork the repo
+2. Create a feature branch
+3. Commit your changes
+4. Open a pull request
+
+---
+
+## License
+MIT
