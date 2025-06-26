@@ -1,65 +1,13 @@
 import Link from "next/link"
 import Image from "next/image"
 import { ChevronRight, BarChart3, PieChart, Utensils, Activity, CheckCircle2, ArrowRight } from "lucide-react"
-
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { ModeToggle } from "@/components/mode-toggle"
 
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
-          <div className="flex gap-6 md:gap-10">
-            <Link href="/" className="flex items-center space-x-2">
-              <BarChart3 className="h-6 w-6 text-emerald-500" />
-              <span className="inline-block font-bold">MacroTrack</span>
-            </Link>
-            <nav className="hidden gap-6 md:flex">
-              <Link
-                href="#features"
-                className="flex items-center text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-              >
-                Features
-              </Link>
-              <Link
-                href="#how-it-works"
-                className="flex items-center text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-              >
-                How It Works
-              </Link>
-              <Link
-                href="#testimonials"
-                className="flex items-center text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-              >
-                Testimonials
-              </Link>
-              <Link
-                href="#pricing"
-                className="flex items-center text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-              >
-                Pricing
-              </Link>
-            </nav>
-          </div>
-          <div className="flex flex-1 items-center justify-end space-x-4">
-            <nav className="flex items-center space-x-2">
-              <ModeToggle />
-              <Link
-                href="/login"
-                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-              >
-                Login
-              </Link>
-              <Button asChild>
-                <Link href="/signup">Sign Up</Link>
-              </Button>
-            </nav>
-          </div>
-        </div>
-      </header>
       <main className="flex-1">
         <section className="w-full py-12 md:py-16 lg:py-20 xl:py-24">
           <div className="container px-4 md:px-6">
@@ -96,23 +44,27 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="features" className="w-full py-12 md:py-24 lg:py-32 bg-muted">
-          <div className="container px-4 md:px-6">
+        <section id="features" className="w-full py-12 md:py-24 lg:py-32 relative">
+          <div className="absolute inset-0 z-0">
+            <div className="w-full h-full bg-black/40 absolute inset-0 z-10" />
+            <Image src="/bg-features.jpg" alt="Delicious Food" fill priority className="object-cover w-full h-full" />
+          </div>
+          <div className="container px-4 md:px-6 relative z-20">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <div className="inline-block rounded-lg bg-emerald-100 px-3 py-1 text-sm text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300">
                   Features
                 </div>
-                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">
+                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl text-white drop-shadow-lg">
                   Everything You Need to Track Your Nutrition
                 </h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl">
+                <p className="max-w-[900px] md:text-xl text-gray-100 drop-shadow">
                   Simple tools to set your macro goals and track your daily food intake with precision.
                 </p>
               </div>
             </div>
             <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 md:grid-cols-2 lg:grid-cols-3">
-              <Card>
+              <Card className="border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10">
                 <CardHeader>
                   <PieChart className="h-10 w-10 text-emerald-500" />
                   <CardTitle className="mt-4">Set Macro Goals</CardTitle>
@@ -123,7 +75,7 @@ export default function Home() {
                   </CardDescription>
                 </CardContent>
               </Card>
-              <Card>
+              <Card className="border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10">
                 <CardHeader>
                   <Utensils className="h-10 w-10 text-emerald-500" />
                   <CardTitle className="mt-4">Track Your Food</CardTitle>
@@ -134,7 +86,7 @@ export default function Home() {
                   </CardDescription>
                 </CardContent>
               </Card>
-              <Card>
+              <Card className="border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10">
                 <CardHeader>
                   <Activity className="h-10 w-10 text-emerald-500" />
                   <CardTitle className="mt-4">Monitor Progress</CardTitle>
@@ -156,15 +108,15 @@ export default function Home() {
                 <div className="inline-block rounded-lg bg-emerald-100 px-3 py-1 text-sm text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300">
                   How It Works
                 </div>
-                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">Simple Steps to Nutritional Success</h2>
+                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl drop-shadow-lg">Simple Steps to Nutritional Success</h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl">
                   Getting started with MacroTrack is easy. Follow these simple steps to begin your journey.
                 </p>
               </div>
             </div>
             <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 md:grid-cols-3">
-              <div className="flex flex-col items-center space-y-2 border rounded-lg p-6 text-center">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+              <div className="flex flex-col items-center space-y-2 border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10 rounded-lg p-6 text-center">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500 text-white dark:bg-emerald-600 dark:text-white">
                   1
                 </div>
                 <h3 className="text-xl font-bold">Set Your Macro Goals</h3>
@@ -172,8 +124,8 @@ export default function Home() {
                   Enter your daily protein, carbs, and fat targets based on your fitness goals.
                 </p>
               </div>
-              <div className="flex flex-col items-center space-y-2 border rounded-lg p-6 text-center">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+              <div className="flex flex-col items-center space-y-2 border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10 rounded-lg p-6 text-center">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500 text-white dark:bg-emerald-600 dark:text-white">
                   2
                 </div>
                 <h3 className="text-xl font-bold">Log Your Meals</h3>
@@ -181,8 +133,8 @@ export default function Home() {
                   Add foods to your daily log with their macro values to track your intake.
                 </p>
               </div>
-              <div className="flex flex-col items-center space-y-2 border rounded-lg p-6 text-center">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+              <div className="flex flex-col items-center space-y-2 border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10 rounded-lg p-6 text-center">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500 text-white dark:bg-emerald-600 dark:text-white">
                   3
                 </div>
                 <h3 className="text-xl font-bold">Stay On Track</h3>
@@ -194,24 +146,32 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="testimonials" className="w-full py-12 md:py-24 lg:py-32 bg-muted">
-          <div className="container px-4 md:px-6">
+        <section id="testimonials" className="w-full py-12 md:py-24 lg:py-32 relative">
+          <div className="absolute inset-0 z-0">
+            <div className="w-full h-full bg-black/40 absolute inset-0 z-10" />
+            <Image src="/bg-testimonials.jpg" alt="Wellness Lake Background" fill priority className="object-cover w-full h-full" />
+          </div>
+          <div className="container px-4 md:px-6 relative z-20">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <div className="inline-block rounded-lg bg-emerald-100 px-3 py-1 text-sm text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300">
                   Testimonials
                 </div>
-                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">Loved by Fitness Enthusiasts</h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl">
+                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl text-white drop-shadow-lg">
+                  Loved by Fitness Enthusiasts
+                </h2>
+                <p className="max-w-[900px] md:text-xl text-gray-100 drop-shadow">
                   See what our users have to say about their experience with MacroTrack.
                 </p>
               </div>
             </div>
             <div className="mx-auto grid max-w-5xl gap-6 py-12 md:grid-cols-2 lg:grid-cols-3">
-              <Card>
+              <Card className="border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10">
                 <CardHeader>
                   <div className="flex items-center gap-4">
-                    <div className="h-10 w-10 rounded-full bg-gray-200"></div>
+                    <div className="h-10 w-10 rounded-full overflow-hidden bg-gray-200">
+                      <Image src="/testimonials/sarah.jpg" alt="Sarah K." width={40} height={40} className="object-cover object-center w-10 h-10 rounded-full" />
+                    </div>
                     <div>
                       <CardTitle className="text-base">Sarah K.</CardTitle>
                       <CardDescription>Fitness Coach</CardDescription>
@@ -225,10 +185,12 @@ export default function Home() {
                   </p>
                 </CardContent>
               </Card>
-              <Card>
+              <Card className="border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10">
                 <CardHeader>
                   <div className="flex items-center gap-4">
-                    <div className="h-10 w-10 rounded-full bg-gray-200"></div>
+                    <div className="h-10 w-10 rounded-full overflow-hidden bg-gray-200">
+                      <Image src="/testimonials/michael.jpg" alt="Michael T." width={40} height={40} className="object-cover object-center w-10 h-10 rounded-full" />
+                    </div>
                     <div>
                       <CardTitle className="text-base">Michael T.</CardTitle>
                       <CardDescription>Marathon Runner</CardDescription>
@@ -242,10 +204,12 @@ export default function Home() {
                   </p>
                 </CardContent>
               </Card>
-              <Card>
+              <Card className="border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10">
                 <CardHeader>
                   <div className="flex items-center gap-4">
-                    <div className="h-10 w-10 rounded-full bg-gray-200"></div>
+                    <div className="h-10 w-10 rounded-full overflow-hidden bg-gray-200">
+                      <Image src="/testimonials/jamie.jpg" alt="Jamie L." width={40} height={40} className="object-cover object-center w-10 h-10 rounded-full" />
+                    </div>
                     <div>
                       <CardTitle className="text-base">Jamie L.</CardTitle>
                       <CardDescription>Weight Loss Journey</CardDescription>
@@ -270,14 +234,14 @@ export default function Home() {
                 <div className="inline-block rounded-lg bg-emerald-100 px-3 py-1 text-sm text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300">
                   Pricing
                 </div>
-                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">Simple, Transparent Pricing</h2>
+                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl drop-shadow-lg">Simple, Transparent Pricing</h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl">
                   Choose the plan that fits your needs. All plans include core tracking features.
                 </p>
               </div>
             </div>
             <div className="mx-auto grid max-w-5xl gap-6 py-12 md:grid-cols-3">
-              <Card>
+              <Card className="border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10">
                 <CardHeader>
                   <CardTitle>Basic</CardTitle>
                   <div className="text-3xl font-bold">Free</div>
@@ -305,7 +269,7 @@ export default function Home() {
                   </Button>
                 </CardFooter>
               </Card>
-              <Card className="border-emerald-200 bg-emerald-50/50 dark:border-emerald-800 dark:bg-emerald-950/20">
+              <Card className="border-2 border-emerald-500 dark:border-emerald-400 bg-emerald-100/70 dark:bg-emerald-900/40 shadow-lg shadow-emerald-900/10 -translate-y-2 ring-2 ring-emerald-300 dark:ring-emerald-700">
                 <CardHeader>
                   <div className="inline-block rounded-lg bg-emerald-100 px-3 py-1 text-sm text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300">
                     Popular
@@ -342,7 +306,7 @@ export default function Home() {
                   </Button>
                 </CardFooter>
               </Card>
-              <Card>
+              <Card className="border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10">
                 <CardHeader>
                   <CardTitle>Premium</CardTitle>
                   <div className="text-3xl font-bold">
@@ -380,10 +344,10 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-emerald-50 dark:bg-emerald-950/20">
+        <section className="w-full py-12 md:py-24 lg:py-32 bg-emerald-50 dark:bg-emerald-900/30">
           <div className="container grid items-center gap-6 px-4 md:px-6 lg:grid-cols-2 lg:gap-10">
             <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
+              <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight drop-shadow-lg">
                 Ready to transform your nutrition?
               </h2>
               <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
@@ -407,14 +371,14 @@ export default function Home() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">Stay Updated</h2>
+                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl drop-shadow-lg">Stay Updated</h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl">
                   Subscribe to our newsletter for tips, updates, and exclusive offers.
                 </p>
               </div>
               <div className="mx-auto w-full max-w-sm space-y-2">
                 <form className="flex space-x-2">
-                  <Input type="email" placeholder="Enter your email" className="max-w-lg flex-1" />
+                  <Input type="email" placeholder="Enter your email" className="max-w-lg flex-1 bg-white text-gray-900" />
                   <Button type="submit">Subscribe</Button>
                 </form>
                 <p className="text-xs text-muted-foreground">We respect your privacy. Unsubscribe at any time.</p>

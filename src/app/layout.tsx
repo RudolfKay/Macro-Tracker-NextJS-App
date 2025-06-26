@@ -5,6 +5,7 @@ import "./globals.css"
 import { ThemeProvider } from "@/components/providers/theme-provider"
 import AuthProvider from "@/components/providers/session-provider"
 import QueryProvider from '@/components/providers/query-client-provider'
+import { NavBar } from "@/components/ui/navbar"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -24,6 +25,7 @@ export default function RootLayout({
         <QueryProvider>
           <AuthProvider>
             <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
+              <NavBar />
               {children}
             </ThemeProvider>
           </AuthProvider>

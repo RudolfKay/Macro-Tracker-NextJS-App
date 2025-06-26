@@ -5,12 +5,10 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { BarChart3, Eye, EyeOff } from "lucide-react"
 import { signIn } from "next-auth/react"
-
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { ModeToggle } from "@/components/mode-toggle"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 
 export default function RegisterPage() {
@@ -97,19 +95,10 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center space-x-2">
-            <BarChart3 className="h-6 w-6 text-emerald-500" />
-            <span className="font-bold text-xl">MacroTrack</span>
-          </Link>
-          <ModeToggle />
-        </div>
-
+    <div className="py-8 md:py-12 bg-background flex items-center justify-center p-4">
+      <div className="w-full max-w-md space-y-4">
         {/* Register Card */}
-        <Card>
+        <Card className="border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl text-center">Create Account</CardTitle>
             <CardDescription className="text-center">
