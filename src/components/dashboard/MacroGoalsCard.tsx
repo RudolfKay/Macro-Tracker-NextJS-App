@@ -3,9 +3,8 @@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger } from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
 import { Edit2, Target } from "lucide-react"
+import { DashboardFormField } from "@/components/dashboard/DashboardFormField"
 
 interface MacroGoals {
   protein: number
@@ -35,7 +34,7 @@ export const MacroGoalsCard = ({
   isSettingMacroGoal,
   formError,
 }: MacroGoalsCardProps) => (
-  <Card>
+  <Card className="border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10">
     <CardHeader className="flex flex-row items-center justify-between">
       <div>
         <CardTitle className="flex items-center gap-2">
@@ -66,48 +65,44 @@ export const MacroGoalsCard = ({
 
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="protein-goal">Protein (g)</Label>
-                <Input
-                  id="protein-goal"
-                  type="number"
-                  value={editingGoals.protein}
-                  onChange={e => setEditingGoals({ ...editingGoals, protein: Number.parseInt(e.target.value) || 0 })}
-                  min={0}
-                />
-              </div>
-              <div>
-                <Label htmlFor="carbs-goal">Carbs (g)</Label>
-                <Input
-                  id="carbs-goal"
-                  type="number"
-                  value={editingGoals.carbs}
-                  onChange={e => setEditingGoals({ ...editingGoals, carbs: Number.parseInt(e.target.value) || 0 })}
-                  min={0}
-                />
-              </div>
+              <DashboardFormField
+                label="Protein (g)"
+                id="protein-goal"
+                type="number"
+                value={editingGoals.protein}
+                onChange={e => setEditingGoals({ ...editingGoals, protein: Number.parseInt(e.target.value) || 0 })}
+                min={0}
+                required
+              />
+              <DashboardFormField
+                label="Carbs (g)"
+                id="carbs-goal"
+                type="number"
+                value={editingGoals.carbs}
+                onChange={e => setEditingGoals({ ...editingGoals, carbs: Number.parseInt(e.target.value) || 0 })}
+                min={0}
+                required
+              />
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="fat-goal">Fat (g)</Label>
-                <Input
-                  id="fat-goal"
-                  type="number"
-                  value={editingGoals.fat}
-                  onChange={e => setEditingGoals({ ...editingGoals, fat: Number.parseInt(e.target.value) || 0 })}
-                  min={0}
-                />
-              </div>
-              <div>
-                <Label htmlFor="calories-goal">Calories</Label>
-                <Input
-                  id="calories-goal"
-                  type="number"
-                  value={editingGoals.calories}
-                  onChange={e => setEditingGoals({ ...editingGoals, calories: Number.parseInt(e.target.value) || 0 })}
-                  min={0}
-                />
-              </div>
+              <DashboardFormField
+                label="Fat (g)"
+                id="fat-goal"
+                type="number"
+                value={editingGoals.fat}
+                onChange={e => setEditingGoals({ ...editingGoals, fat: Number.parseInt(e.target.value) || 0 })}
+                min={0}
+                required
+              />
+              <DashboardFormField
+                label="Calories"
+                id="calories-goal"
+                type="number"
+                value={editingGoals.calories}
+                onChange={e => setEditingGoals({ ...editingGoals, calories: Number.parseInt(e.target.value) || 0 })}
+                min={0}
+                required
+              />
             </div>
           </div>
 

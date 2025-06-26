@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../../auth/[...nextauth]/route';
 import { PrismaClient } from '@prisma/client';
+import path from "path";
+import fs from "fs/promises";
 
 const prisma = new PrismaClient();
 
@@ -51,6 +53,16 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
   const { id } = await request.json();
+  // Fetch user to get profileImage path
+  const user = await prisma.user.findUnique({ where: { id } });
+  if (user?.profileImage) {
+    const filePath = path.join(process.cwd(), "public", user.profileImage.startsWith("/") ? user.profileImage.slice(1) : user.profileImage);
+    try {
+      await fs.unlink(filePath);
+    } catch (err) {
+      // Ignore if file does not exist or cannot be deleted
+    }
+  }
   await prisma.user.delete({ where: { id } });
   return NextResponse.json({ success: true });
 } 

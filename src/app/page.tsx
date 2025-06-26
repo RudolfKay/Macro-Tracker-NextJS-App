@@ -1,9 +1,118 @@
 import Link from "next/link"
 import Image from "next/image"
-import { ChevronRight, BarChart3, PieChart, Utensils, Activity, CheckCircle2, ArrowRight } from "lucide-react"
+import { ChevronRight, BarChart3, PieChart, Utensils, Activity, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
+import { FeatureCard } from "@/components/landing/FeatureCard"
+import { HowItWorksStep } from "@/components/landing/HowItWorksStep"
+import { TestimonialCard } from "@/components/landing/TestimonialCard"
+import { PricingCard } from "@/components/landing/PricingCard"
+import { SignupRedirectButton } from "@/components/landing/SignupRedirectButton"
+
+const features = [
+  {
+    icon: PieChart,
+    title: "Set Macro Goals",
+    description: "Define your daily protein, carbs, and fat targets based on your fitness goals and dietary needs.",
+  },
+  {
+    icon: Utensils,
+    title: "Track Your Food",
+    description: "Log your meals and snacks with accurate macro values to stay on track with your daily goals.",
+  },
+  {
+    icon: Activity,
+    title: "Monitor Progress",
+    description: "View your daily macro intake and see how close you are to hitting your personalized targets.",
+  },
+]
+
+const howItWorksSteps = [
+  {
+    stepNumber: 1,
+    title: "Set Your Macro Goals",
+    description: "Enter your daily protein, carbs, and fat targets based on your fitness goals.",
+  },
+  {
+    stepNumber: 2,
+    title: "Log Your Meals",
+    description: "Add foods to your daily log with their macro values to track your intake.",
+  },
+  {
+    stepNumber: 3,
+    title: "Stay On Track",
+    description: "Monitor your progress throughout the day and adjust your meals as needed.",
+  },
+]
+
+const testimonials = [
+  {
+    image: "/testimonials/sarah.jpg",
+    name: "Sarah K.",
+    role: "Fitness Coach",
+    testimonial:
+      '"MacroTrack has transformed how I manage my clients\' nutrition plans. The detailed insights and easy tracking make my job so much easier."',
+  },
+  {
+    image: "/testimonials/michael.jpg",
+    name: "Michael T.",
+    role: "Marathon Runner",
+    testimonial:
+      '"I\'ve tried many nutrition apps, but MacroTrack is by far the most intuitive. It\'s helped me optimize my training diet for peak performance."',
+  },
+  {
+    image: "/testimonials/jamie.jpg",
+    name: "Jamie L.",
+    role: "Weight Loss Journey",
+    testimonial:
+      '"MacroTrack made understanding nutrition simple. I\'ve lost 30 pounds by following my personalized macro targets!"',
+  },
+]
+
+const pricingPlans = [
+  {
+    title: "Basic",
+    price: "Free",
+    description: "Perfect for beginners",
+    features: [
+      "Basic macro tracking",
+      "Food database access",
+      "Weekly reports",
+    ],
+    buttonLabel: "Get Started",
+    buttonHref: "/signup",
+    highlight: false,
+  },
+  {
+    title: "Pro",
+    price: "$9.99",
+    description: "For serious fitness enthusiasts",
+    features: [
+      "Everything in Basic",
+      "Advanced analytics",
+      "Meal planning tools",
+      "Barcode scanner",
+    ],
+    buttonLabel: "Start 7-Day Trial",
+    buttonHref: "/signup",
+    highlight: true,
+    highlightLabel: "Popular",
+  },
+  {
+    title: "Premium",
+    price: "$19.99",
+    description: "For coaches and professionals",
+    features: [
+      "Everything in Pro",
+      "Client management",
+      "Custom meal templates",
+      "Priority support",
+    ],
+    buttonLabel: "Contact Sales",
+    buttonHref: "/signup",
+    highlight: false,
+  },
+]
 
 export default function Home() {
   return (
@@ -14,20 +123,18 @@ export default function Home() {
             <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
               <div className="flex flex-col justify-center items-center text-center space-y-4">
                 <div className="space-y-4">
-                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
+                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none drop-shadow-lg">
                     Track Your Macros, Achieve Your Goals
                   </h1>
                   <p className="text-muted-foreground md:text-xl">
-                    The smart way to monitor your nutrition. <br></br>Personalized macro tracking that adapts to your lifestyle
+                    The smart way to monitor your nutrition. <br />Personalized macro tracking that adapts to your lifestyle
                     and fitness goals.
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                  <Button size="lg" asChild>
-                    <Link href="/signup">
-                      Get Started <ChevronRight className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
+                  <SignupRedirectButton icon={<ChevronRight className="h-4 w-4" />}>
+                    Get Started
+                  </SignupRedirectButton>
                   <Button variant="outline" size="lg" asChild>
                     <Link href="#features">Learn More</Link>
                   </Button>
@@ -64,39 +171,9 @@ export default function Home() {
               </div>
             </div>
             <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 md:grid-cols-2 lg:grid-cols-3">
-              <Card className="border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10">
-                <CardHeader>
-                  <PieChart className="h-10 w-10 text-emerald-500" />
-                  <CardTitle className="mt-4">Set Macro Goals</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription>
-                    Define your daily protein, carbs, and fat targets based on your fitness goals and dietary needs.
-                  </CardDescription>
-                </CardContent>
-              </Card>
-              <Card className="border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10">
-                <CardHeader>
-                  <Utensils className="h-10 w-10 text-emerald-500" />
-                  <CardTitle className="mt-4">Track Your Food</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription>
-                    Log your meals and snacks with accurate macro values to stay on track with your daily goals.
-                  </CardDescription>
-                </CardContent>
-              </Card>
-              <Card className="border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10">
-                <CardHeader>
-                  <Activity className="h-10 w-10 text-emerald-500" />
-                  <CardTitle className="mt-4">Monitor Progress</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription>
-                    View your daily macro intake and see how close you are to hitting your personalized targets.
-                  </CardDescription>
-                </CardContent>
-              </Card>
+              {features.map((feature, idx) => (
+                <FeatureCard key={idx} {...feature} />
+              ))}
             </div>
           </div>
         </section>
@@ -115,33 +192,9 @@ export default function Home() {
               </div>
             </div>
             <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 md:grid-cols-3">
-              <div className="flex flex-col items-center space-y-2 border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10 rounded-lg p-6 text-center">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500 text-white dark:bg-emerald-600 dark:text-white">
-                  1
-                </div>
-                <h3 className="text-xl font-bold">Set Your Macro Goals</h3>
-                <p className="text-muted-foreground">
-                  Enter your daily protein, carbs, and fat targets based on your fitness goals.
-                </p>
-              </div>
-              <div className="flex flex-col items-center space-y-2 border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10 rounded-lg p-6 text-center">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500 text-white dark:bg-emerald-600 dark:text-white">
-                  2
-                </div>
-                <h3 className="text-xl font-bold">Log Your Meals</h3>
-                <p className="text-muted-foreground">
-                  Add foods to your daily log with their macro values to track your intake.
-                </p>
-              </div>
-              <div className="flex flex-col items-center space-y-2 border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10 rounded-lg p-6 text-center">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500 text-white dark:bg-emerald-600 dark:text-white">
-                  3
-                </div>
-                <h3 className="text-xl font-bold">Stay On Track</h3>
-                <p className="text-muted-foreground">
-                  Monitor your progress throughout the day and adjust your meals as needed.
-                </p>
-              </div>
+              {howItWorksSteps.map((step, idx) => (
+                <HowItWorksStep key={idx} {...step} />
+              ))}
             </div>
           </div>
         </section>
@@ -166,63 +219,9 @@ export default function Home() {
               </div>
             </div>
             <div className="mx-auto grid max-w-5xl gap-6 py-12 md:grid-cols-2 lg:grid-cols-3">
-              <Card className="border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10">
-                <CardHeader>
-                  <div className="flex items-center gap-4">
-                    <div className="h-10 w-10 rounded-full overflow-hidden bg-gray-200">
-                      <Image src="/testimonials/sarah.jpg" alt="Sarah K." width={40} height={40} className="object-cover object-center w-10 h-10 rounded-full" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-base">Sarah K.</CardTitle>
-                      <CardDescription>Fitness Coach</CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">
-                    "MacroTrack has transformed how I manage my clients' nutrition plans. The detailed insights and easy
-                    tracking make my job so much easier."
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10">
-                <CardHeader>
-                  <div className="flex items-center gap-4">
-                    <div className="h-10 w-10 rounded-full overflow-hidden bg-gray-200">
-                      <Image src="/testimonials/michael.jpg" alt="Michael T." width={40} height={40} className="object-cover object-center w-10 h-10 rounded-full" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-base">Michael T.</CardTitle>
-                      <CardDescription>Marathon Runner</CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">
-                    "I've tried many nutrition apps, but MacroTrack is by far the most intuitive. It's helped me
-                    optimize my training diet for peak performance."
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10">
-                <CardHeader>
-                  <div className="flex items-center gap-4">
-                    <div className="h-10 w-10 rounded-full overflow-hidden bg-gray-200">
-                      <Image src="/testimonials/jamie.jpg" alt="Jamie L." width={40} height={40} className="object-cover object-center w-10 h-10 rounded-full" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-base">Jamie L.</CardTitle>
-                      <CardDescription>Weight Loss Journey</CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">
-                    "MacroTrack made understanding nutrition simple. I've lost 30 pounds by following my personalized
-                    macro targets!"
-                  </p>
-                </CardContent>
-              </Card>
+              {testimonials.map((testimonial, idx) => (
+                <TestimonialCard key={idx} {...testimonial} />
+              ))}
             </div>
           </div>
         </section>
@@ -241,105 +240,24 @@ export default function Home() {
               </div>
             </div>
             <div className="mx-auto grid max-w-5xl gap-6 py-12 md:grid-cols-3">
-              <Card className="border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10">
-                <CardHeader>
-                  <CardTitle>Basic</CardTitle>
-                  <div className="text-3xl font-bold">Free</div>
-                  <CardDescription>Perfect for beginners</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ul className="grid gap-2">
-                    <li className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                      <span>Basic macro tracking</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                      <span>Food database access</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                      <span>Weekly reports</span>
-                    </li>
-                  </ul>
-                </CardContent>
-                <CardFooter>
-                  <Button className="w-full" variant="outline" asChild>
-                    <Link href="/signup">Get Started</Link>
-                  </Button>
-                </CardFooter>
-              </Card>
-              <Card className="border-2 border-emerald-500 dark:border-emerald-400 bg-emerald-100/70 dark:bg-emerald-900/40 shadow-lg shadow-emerald-900/10 -translate-y-2 ring-2 ring-emerald-300 dark:ring-emerald-700">
-                <CardHeader>
-                  <div className="inline-block rounded-lg bg-emerald-100 px-3 py-1 text-sm text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300">
-                    Popular
-                  </div>
-                  <CardTitle>Pro</CardTitle>
-                  <div className="text-3xl font-bold">
-                    $9.99<span className="text-sm font-normal text-muted-foreground">/month</span>
-                  </div>
-                  <CardDescription>For serious fitness enthusiasts</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ul className="grid gap-2">
-                    <li className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                      <span>Everything in Basic</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                      <span>Advanced analytics</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                      <span>Meal planning tools</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                      <span>Barcode scanner</span>
-                    </li>
-                  </ul>
-                </CardContent>
-                <CardFooter>
-                  <Button className="w-full" asChild>
-                    <Link href="/signup">Start 7-Day Trial</Link>
-                  </Button>
-                </CardFooter>
-              </Card>
-              <Card className="border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10">
-                <CardHeader>
-                  <CardTitle>Premium</CardTitle>
-                  <div className="text-3xl font-bold">
-                    $19.99<span className="text-sm font-normal text-muted-foreground">/month</span>
-                  </div>
-                  <CardDescription>For coaches and professionals</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ul className="grid gap-2">
-                    <li className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                      <span>Everything in Pro</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                      <span>Client management</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                      <span>Custom meal templates</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                      <span>Priority support</span>
-                    </li>
-                  </ul>
-                </CardContent>
-                <CardFooter>
-                  <Button className="w-full" variant="outline" asChild>
-                    <Link href="/signup">Contact Sales</Link>
-                  </Button>
-                </CardFooter>
-              </Card>
+              {pricingPlans.map((plan, idx) => (
+                <PricingCard
+                  key={idx}
+                  {...plan}
+                  {...(plan.buttonHref === "/signup"
+                    ? { customButton: (
+                        <SignupRedirectButton size="lg">
+                          {plan.buttonLabel}
+                        </SignupRedirectButton>
+                      ) }
+                    : { customButton: (
+                        <Button className="w-full" asChild={true} variant={plan.highlight ? undefined : "outline"}>
+                          <Link href={plan.buttonHref}>{plan.buttonLabel}</Link>
+                        </Button>
+                      ) }
+                  )}
+                />
+              ))}
             </div>
           </div>
         </section>
@@ -355,11 +273,9 @@ export default function Home() {
               </p>
             </div>
             <div className="flex flex-col gap-2 min-[400px]:flex-row lg:justify-end">
-              <Button size="lg" asChild>
-                <Link href="/signup">
-                  Get Started <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
+              <SignupRedirectButton icon={<ArrowRight className="h-4 w-4" />}>
+                Get Started
+              </SignupRedirectButton>
               <Button variant="outline" size="lg" asChild>
                 <Link href="#features">Learn More</Link>
               </Button>

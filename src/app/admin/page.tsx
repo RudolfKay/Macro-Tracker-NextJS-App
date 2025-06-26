@@ -9,6 +9,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogC
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
+import { UserRow } from "@/components/admin/UserRow";
+import { EditUserDialog } from "@/components/admin/EditUserDialog";
+import { DeleteUserDialog } from "@/components/admin/DeleteUserDialog";
 
 interface User {
   id: string;
@@ -123,7 +126,7 @@ const AdminPanel = () => {
   if (error) return <div className="p-8 text-red-500">{error}</div>;
 
   return (
-    <div className="max-w-2xl mx-auto mt-10 p-6 bg-white dark:bg-neutral-900 rounded-lg shadow">
+    <div className="max-w-2xl mx-auto mt-10 p-6 bg-white dark:bg-neutral-900 rounded-lg border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10">
       <div className="flex items-center justify-between mb-6">
         <Button asChild variant="outline" className="flex items-center gap-2">
           <Link href="/dashboard" aria-label="Back to Dashboard">
@@ -134,86 +137,32 @@ const AdminPanel = () => {
       </div>
       <div className="divide-y divide-neutral-200 dark:divide-neutral-700">
         {users.map((user) => (
-          <div
+          <UserRow
             key={user.id}
-            className="flex items-center gap-4 py-4 px-2 group hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded transition cursor-pointer"
-            tabIndex={0}
-            aria-label={`User ${user.name}`}
-          >
-            <button
-              className="p-2 rounded hover:bg-neutral-200 dark:hover:bg-neutral-700 focus:outline-none"
-              aria-label="Edit user"
-              tabIndex={0}
-              onClick={() => handleEditClick(user)}
-            >
-              <Pencil className="w-5 h-5 text-neutral-500 group-hover:text-blue-600" />
-            </button>
-            {user.id !== session?.user?.id && (
-              <button
-                className="p-2 rounded hover:bg-neutral-200 dark:hover:bg-neutral-700 focus:outline-none"
-                aria-label="Delete user"
-                tabIndex={0}
-                onClick={() => handleDeleteClick(user)}
-              >
-                <Trash2 className="w-5 h-5 text-neutral-500 group-hover:text-red-600" />
-              </button>
-            )}
-            <div className="flex-1">
-              <div className="font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
-                {user.name}
-                {user.role === "ADMIN" && (
-                  <span className="ml-2 px-2 py-0.5 text-xs bg-blue-100 text-blue-700 rounded">Admin</span>
-                )}
-              </div>
-              <div className="text-neutral-500 text-sm">{user.email}</div>
-            </div>
-            <div className="text-neutral-400 text-xs">
-              {new Date(user.createdAt).toLocaleDateString()}
-            </div>
-          </div>
+            user={user}
+            isCurrentUser={user.id === session?.user?.id}
+            onEdit={handleEditClick}
+            onDelete={handleDeleteClick}
+          />
         ))}
       </div>
-      {/* Edit User Dialog */}
-      <Dialog open={editOpen} onOpenChange={setEditOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Edit User</DialogTitle>
-          </DialogHeader>
-          <form onSubmit={handleEditSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" name="name" value={form.name} onChange={handleEditChange} required disabled={formLoading} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" name="email" type="email" value={form.email} onChange={handleEditChange} required disabled={formLoading} />
-            </div>
-            <DialogFooter className="flex flex-row gap-2 justify-end">
-              <DialogClose asChild>
-                <Button type="button" variant="ghost" disabled={formLoading}>Cancel</Button>
-              </DialogClose>
-              <Button type="submit" disabled={formLoading}>{formLoading ? "Saving..." : "Save Changes"}</Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
-      {/* Delete User Dialog */}
-      <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Delete User</DialogTitle>
-          </DialogHeader>
-          <div className="mb-4">Are you sure you want to delete <span className="font-semibold">{selectedUser?.name}</span>? This action cannot be undone.</div>
-          <DialogFooter className="flex flex-row gap-2 justify-end">
-            <DialogClose asChild>
-              <Button type="button" variant="ghost" disabled={deleteLoading}>Cancel</Button>
-            </DialogClose>
-            <Button type="button" variant="destructive" onClick={handleDeleteConfirm} disabled={deleteLoading}>
-              {deleteLoading ? "Deleting..." : "Delete"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <EditUserDialog
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        form={form}
+        onChange={handleEditChange}
+        onSubmit={handleEditSubmit}
+        loading={formLoading}
+        onCancel={() => setEditOpen(false)}
+      />
+      <DeleteUserDialog
+        open={deleteOpen}
+        onOpenChange={setDeleteOpen}
+        user={selectedUser}
+        loading={deleteLoading}
+        onCancel={() => setDeleteOpen(false)}
+        onConfirm={handleDeleteConfirm}
+      />
     </div>
   );
 };
