@@ -18,10 +18,10 @@ All access to user-specific data (macros, food entries, etc.) is protected by au
 
 ```mermaid
 graph TD
-  A["Client (Browser)"] -->|"HTTP"| B["Next.js App (API Routes & Pages)"]
-  B -->|"Auth Check (NextAuth.js)"| C["Authentication"]
-  C -->|"If Authenticated"| D["Prisma Client"]
-  D -->|"SQL"| E["PostgreSQL Database"]
+  A["Client (Browser)"] --> B["Next.js App (API Routes & Pages)"]
+  B --> C["Authentication (NextAuth.js)"]
+  C --> D["Prisma Client"]
+  D --> E["PostgreSQL Database"]
   B --> F["UI Components (React, TailwindCSS, Shadcn)"]
 ```
 
