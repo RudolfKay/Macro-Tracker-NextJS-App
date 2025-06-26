@@ -138,10 +138,14 @@ const ProfilePage = () => {
   return (
     <ProtectedRoute>
       <div className="min-h-screen flex flex-col items-center justify-center bg-background p-4">
-        <div className="w-full max-w-md mx-auto mb-4 flex justify-start">
-          <Link href="/dashboard" className="text-emerald-600 hover:underline font-medium">&larr; Back to Dashboard</Link>
-        </div>
         <Card className="w-full max-w-md mx-auto p-6 flex flex-col items-center gap-6">
+          <div className="w-full flex justify-between items-center mb-4">
+            <Button asChild variant="outline" className="flex items-center gap-2">
+              <Link href="/dashboard" aria-label="Back to Dashboard">
+                <span aria-hidden="true">&larr;</span> Dashboard
+              </Link>
+            </Button>
+          </div>
           <CardHeader className="flex flex-col items-center gap-2">
             <div className="relative group cursor-pointer bg-white dark:bg-white rounded-full w-[111px] h-[111px] flex items-center justify-center" onClick={handlePhotoClick} tabIndex={0} aria-label="Change profile photo">
               <Image

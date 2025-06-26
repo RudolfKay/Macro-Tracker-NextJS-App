@@ -136,6 +136,14 @@ export function Dashboard() {
                     Profile
                   </Link>
                 </DropdownMenuItem>
+                {session?.user?.role === 'ADMIN' && (
+                  <DropdownMenuItem asChild>
+                    <Link href="/admin" className="flex items-center">
+                      <User className="h-4 w-4 mr-2" />
+                      Admin Panel
+                    </Link>
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout} className="text-red-600 focus:text-red-700">
                   <LogOut className="h-4 w-4 mr-2" />

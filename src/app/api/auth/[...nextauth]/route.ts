@@ -33,6 +33,7 @@ const authOptions: NextAuthOptions = {
             id: user.id,
             name: user.name,
             email: user.email,
+            role: user.role,
           };
         }
 
@@ -53,12 +54,14 @@ const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id;
         token.profileImage = user.profileImage || user.image || null;
+        token.role = user.role;
       }
       return token;
     },
     async session({ session, token }: { session: any; token: any }) {
       if (token && session.user) {
         session.user.id = token.id as string;
+        session.user.role = token.role;
         // Always fetch the latest user data from the database
         const dbUser = await prisma.user.findUnique({ where: { id: token.id } });
         let profileImage = dbUser?.profileImage || token.profileImage || null;
@@ -78,6 +81,7 @@ const authOptions: NextAuthOptions = {
         session.user.profileImage = profileImage;
         session.user.name = dbUser?.name || session.user.name;
         session.user.email = dbUser?.email || session.user.email;
+        session.user.role = dbUser?.role || session.user.role;
       }
       return session;
     },
