@@ -33,6 +33,16 @@ graph TD
 
 ---
 
+## Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+- **Node.js** (v18 or higher recommended): [Download Node.js](https://nodejs.org/)
+- **npm** (comes with Node.js) or [Yarn](https://yarnpkg.com/) (optional)
+- **PostgreSQL** (v13 or higher recommended): [Download PostgreSQL](https://www.postgresql.org/download/)
+
+---
+
 ## Getting Started
 
 ### 1. Clone the repository
