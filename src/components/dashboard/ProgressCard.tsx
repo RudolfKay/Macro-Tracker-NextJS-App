@@ -18,7 +18,7 @@ interface ProgressCardProps {
 }
 
 export const ProgressCard = ({ totals, macroGoal, getPercentageDisplay }: ProgressCardProps) => (
-  <Card>
+  <Card className="border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10">
     <CardHeader>
       <CardTitle className="flex items-center gap-2">
         <TrendingUp className="h-5 w-5 text-emerald-500" />

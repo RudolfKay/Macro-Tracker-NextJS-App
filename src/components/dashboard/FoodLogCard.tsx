@@ -3,11 +3,10 @@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger } from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
 import { Plus, Utensils, Trash2, Edit2 } from "lucide-react"
 import React, { useState } from "react"
 import type { FoodEntry } from "@/api/foodEntry"
+import { DashboardFormField } from "@/components/dashboard/DashboardFormField"
 
 type FoodLogCardProps = {
   foodEntries: FoodEntry[]
@@ -102,7 +101,7 @@ export const FoodLogCard: React.FC<FoodLogCardProps> = ({
   }
 
   return (
-    <Card>
+    <Card className="border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10">
       <CardHeader className="flex flex-row items-center justify-between">
         <div>
           <CardTitle className="flex items-center gap-2">
@@ -129,62 +128,57 @@ export const FoodLogCard: React.FC<FoodLogCardProps> = ({
               </div>
             )}
             <div className="grid gap-4 py-4">
-              <div>
-                <Label htmlFor="food-name">Food Name</Label>
-                <Input
-                  id="food-name"
-                  placeholder="e.g., Chicken Breast (200g)"
-                  value={newFood.name}
-                  onChange={e => setNewFood({ ...newFood, name: e.target.value })}
+              <DashboardFormField
+                label="Food Name"
+                id="food-name"
+                value={newFood.name}
+                onChange={e => setNewFood({ ...newFood, name: e.target.value })}
+                placeholder="e.g., Chicken Breast (200g)"
+                required
+              />
+              <div className="grid grid-cols-2 gap-4">
+                <DashboardFormField
+                  label="Protein (g)"
+                  id="protein"
+                  type="number"
+                  value={newFood.protein}
+                  onChange={e => setNewFood({ ...newFood, protein: e.target.value })}
+                  placeholder="0"
+                  min={0}
+                  required
+                />
+                <DashboardFormField
+                  label="Carbs (g)"
+                  id="carbs"
+                  type="number"
+                  value={newFood.carbs}
+                  onChange={e => setNewFood({ ...newFood, carbs: e.target.value })}
+                  placeholder="0"
+                  min={0}
+                  required
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="protein">Protein (g)</Label>
-                  <Input
-                    id="protein"
-                    type="number"
-                    placeholder="0"
-                    value={newFood.protein}
-                    onChange={e => setNewFood({ ...newFood, protein: e.target.value })}
-                    min={0}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="carbs">Carbs (g)</Label>
-                  <Input
-                    id="carbs"
-                    type="number"
-                    placeholder="0"
-                    value={newFood.carbs}
-                    onChange={e => setNewFood({ ...newFood, carbs: e.target.value })}
-                    min={0}
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="fat">Fat (g)</Label>
-                  <Input
-                    id="fat"
-                    type="number"
-                    placeholder="0"
-                    value={newFood.fat}
-                    onChange={e => setNewFood({ ...newFood, fat: e.target.value })}
-                    min={0}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="calories">Calories</Label>
-                  <Input
-                    id="calories"
-                    type="number"
-                    placeholder="0"
-                    value={newFood.calories}
-                    onChange={e => setNewFood({ ...newFood, calories: e.target.value })}
-                    min={0}
-                  />
-                </div>
+                <DashboardFormField
+                  label="Fat (g)"
+                  id="fat"
+                  type="number"
+                  value={newFood.fat}
+                  onChange={e => setNewFood({ ...newFood, fat: e.target.value })}
+                  placeholder="0"
+                  min={0}
+                  required
+                />
+                <DashboardFormField
+                  label="Calories"
+                  id="calories"
+                  type="number"
+                  value={newFood.calories}
+                  onChange={e => setNewFood({ ...newFood, calories: e.target.value })}
+                  placeholder="0"
+                  min={0}
+                  required
+                />
               </div>
             </div>
             <DialogFooter>
@@ -209,62 +203,57 @@ export const FoodLogCard: React.FC<FoodLogCardProps> = ({
               </div>
             )}
             <div className="grid gap-4 py-4">
-              <div>
-                <Label htmlFor="edit-food-name">Food Name</Label>
-                <Input
-                  id="edit-food-name"
-                  placeholder="e.g., Chicken Breast (200g)"
-                  value={editFood.name}
-                  onChange={e => setEditFood({ ...editFood, name: e.target.value })}
+              <DashboardFormField
+                label="Food Name"
+                id="edit-food-name"
+                value={editFood.name}
+                onChange={e => setEditFood({ ...editFood, name: e.target.value })}
+                placeholder="e.g., Chicken Breast (200g)"
+                required
+              />
+              <div className="grid grid-cols-2 gap-4">
+                <DashboardFormField
+                  label="Protein (g)"
+                  id="edit-protein"
+                  type="number"
+                  value={editFood.protein}
+                  onChange={e => setEditFood({ ...editFood, protein: e.target.value })}
+                  placeholder="0"
+                  min={0}
+                  required
+                />
+                <DashboardFormField
+                  label="Carbs (g)"
+                  id="edit-carbs"
+                  type="number"
+                  value={editFood.carbs}
+                  onChange={e => setEditFood({ ...editFood, carbs: e.target.value })}
+                  placeholder="0"
+                  min={0}
+                  required
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="edit-protein">Protein (g)</Label>
-                  <Input
-                    id="edit-protein"
-                    type="number"
-                    placeholder="0"
-                    value={editFood.protein}
-                    onChange={e => setEditFood({ ...editFood, protein: e.target.value })}
-                    min={0}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="edit-carbs">Carbs (g)</Label>
-                  <Input
-                    id="edit-carbs"
-                    type="number"
-                    placeholder="0"
-                    value={editFood.carbs}
-                    onChange={e => setEditFood({ ...editFood, carbs: e.target.value })}
-                    min={0}
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="edit-fat">Fat (g)</Label>
-                  <Input
-                    id="edit-fat"
-                    type="number"
-                    placeholder="0"
-                    value={editFood.fat}
-                    onChange={e => setEditFood({ ...editFood, fat: e.target.value })}
-                    min={0}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="edit-calories">Calories</Label>
-                  <Input
-                    id="edit-calories"
-                    type="number"
-                    placeholder="0"
-                    value={editFood.calories}
-                    onChange={e => setEditFood({ ...editFood, calories: e.target.value })}
-                    min={0}
-                  />
-                </div>
+                <DashboardFormField
+                  label="Fat (g)"
+                  id="edit-fat"
+                  type="number"
+                  value={editFood.fat}
+                  onChange={e => setEditFood({ ...editFood, fat: e.target.value })}
+                  placeholder="0"
+                  min={0}
+                  required
+                />
+                <DashboardFormField
+                  label="Calories"
+                  id="edit-calories"
+                  type="number"
+                  value={editFood.calories}
+                  onChange={e => setEditFood({ ...editFood, calories: e.target.value })}
+                  placeholder="0"
+                  min={0}
+                  required
+                />
               </div>
             </div>
             <DialogFooter>

@@ -66,14 +66,21 @@ npm install
   - `NEXTAUTH_URL` (e.g., http://localhost:3000 for local dev)
   - `NEXTAUTH_SECRET` (generate with `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`)
 
-### 4. Set up the database
-- Ensure PostgreSQL is running and accessible.
-- Run migrations and generate the Prisma client:
+### 4. Set up the database (migrate & seed)
+- Run the following command to set up your database and seed the default admin user:
   ```bash
-  npx prisma migrate dev
-  # or for production
-  # npx prisma migrate deploy
+  npm run setup:db
   ```
+  This will:
+  - Run all pending Prisma migrations
+  - Seed the database with a default admin user (if not already present)
+
+  **Default admin credentials:**
+  - Email: `admin@macrotrack.com`
+  - Password: `admin123`
+
+  > **Note:**
+  > This script is intended for local development and onboarding. In production, you should run migrations and seeds manually and with care. Do NOT run seeds automatically on every migration in production, as this can lead to accidental data overwrites or security issues.
 
 ### 5. Start the development server
 ```bash
@@ -97,7 +104,8 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 - `npm run dev` — Start the development server
 - `npm run build` — Build for production
 - `npm run start` — Start the production server
-- `npx prisma migrate dev` — Run migrations and create the database (dev)
+- `npm run setup:db` — Run all migrations and seed the default admin user (recommended for local/dev setup)
+- `npx prisma migrate dev` — Run migrations and create the database (dev, advanced)
 - `npx prisma generate` — Generate Prisma client
 
 ---

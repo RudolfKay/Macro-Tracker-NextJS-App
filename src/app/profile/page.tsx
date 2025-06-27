@@ -13,6 +13,9 @@ import { useRouter } from "next/navigation";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { ProfileCard } from "@/components/profile/ProfileCard";
+import { ProfilePhoto } from "@/components/profile/ProfilePhoto";
+import { EditProfileDialog } from "@/components/profile/EditProfileDialog";
 
 const ProfilePage = () => {
   const { data: session, update } = useSession();
@@ -138,79 +141,31 @@ const ProfilePage = () => {
   return (
     <ProtectedRoute>
       <div className="min-h-screen flex flex-col items-center justify-center bg-background p-4">
-        <div className="w-full max-w-md mx-auto mb-4 flex justify-start">
-          <Link href="/dashboard" className="text-emerald-600 hover:underline font-medium">&larr; Back to Dashboard</Link>
-        </div>
-        <Card className="w-full max-w-md mx-auto p-6 flex flex-col items-center gap-6">
-          <CardHeader className="flex flex-col items-center gap-2">
-            <div className="relative group cursor-pointer bg-white dark:bg-white rounded-full w-[111px] h-[111px] flex items-center justify-center" onClick={handlePhotoClick} tabIndex={0} aria-label="Change profile photo">
-              <Image
-                src={preview || (session.user as any)?.profileImage || session.user.image || "/avatar.svg"}
-                alt="Profile photo"
-                width={111}
-                height={111}
-                className={`rounded-full border-4 border-emerald-400 shadow-md object-cover object-center transition group-hover:opacity-80 w-[111px] h-[111px]${isDefaultAvatar ? " opacity-50" : ""}`}
-                onError={handleImageError}
-                tabIndex={0}
-                aria-label="User profile photo"
-              />
-              <input
-                type="file"
-                accept="image/*"
-                ref={fileInputRef}
-                className="hidden"
-                onChange={handleFileChange}
-              />
-              <span className="absolute bottom-0 right-0 bg-emerald-500 text-white text-xs rounded-full px-2 py-1 opacity-80 group-hover:opacity-100 transition">Change</span>
-            </div>
-            <Button
-              variant="ghost"
-              className="mt-2 text-xs text-red-600 hover:text-red-700"
-              onClick={handleRemovePhoto}
-              disabled={uploading}
-            >
-              Remove Photo
-            </Button>
-            <CardTitle className="mt-4 text-2xl">{session.user.name}</CardTitle>
-            <p className="text-muted-foreground">{session.user.email}</p>
-          </CardHeader>
-          <CardContent className="w-full flex flex-col items-center gap-4">
-            <Button className="w-full max-w-xs" variant="outline" onClick={() => setEditOpen(true)}>
-              Edit Profile
-            </Button>
-          </CardContent>
-        </Card>
-        <Dialog open={editOpen} onOpenChange={setEditOpen}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Edit Profile</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleEditSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
-                <Input id="name" name="name" value={form.name} onChange={handleEditChange} required disabled={formLoading} />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" name="email" type="email" value={form.email} onChange={handleEditChange} required disabled={formLoading} />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="newPassword">New Password</Label>
-                <Input id="newPassword" name="newPassword" type="password" value={form.newPassword} onChange={handleEditChange} minLength={6} disabled={formLoading} placeholder="Leave blank to keep current password" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="currentPassword">Current Password</Label>
-                <Input id="currentPassword" name="currentPassword" type="password" value={form.currentPassword} onChange={handleEditChange} required disabled={formLoading} />
-              </div>
-              <DialogFooter className="flex flex-row gap-2 justify-end">
-                <DialogClose asChild>
-                  <Button type="button" variant="ghost" disabled={formLoading}>Cancel</Button>
-                </DialogClose>
-                <Button type="submit" disabled={formLoading}>{formLoading ? "Saving..." : "Save Changes"}</Button>
-              </DialogFooter>
-            </form>
-          </DialogContent>
-        </Dialog>
+        <ProfileCard name={session.user.name || ""} email={session.user.email || ""}>
+          <ProfilePhoto
+            src={(session.user as any)?.profileImage || session.user.image || "/avatar.svg"}
+            preview={preview}
+            isDefault={isDefaultAvatar}
+            uploading={uploading}
+            onClick={handlePhotoClick}
+            onFileChange={handleFileChange}
+            onRemove={handleRemovePhoto}
+            fileInputRef={fileInputRef as React.RefObject<HTMLInputElement>}
+            onImageError={handleImageError}
+          />
+          <Button className="w-full max-w-xs mt-8" variant="outline" onClick={() => setEditOpen(true)}>
+            Edit Profile
+          </Button>
+        </ProfileCard>
+        <EditProfileDialog
+          open={editOpen}
+          onOpenChange={setEditOpen}
+          form={form}
+          onChange={handleEditChange}
+          onSubmit={handleEditSubmit}
+          loading={formLoading}
+          onCancel={() => setEditOpen(false)}
+        />
       </div>
     </ProtectedRoute>
   );

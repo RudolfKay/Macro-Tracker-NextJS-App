@@ -20,6 +20,7 @@ model User {
   password     String
   createdAt    DateTime    @default(now())
   profileImage String? // Path to profile photo
+  role         String      @default("USER") // 'USER' or 'ADMIN'
   accounts     Account[]
   sessions     Session[]
   macroGoals   MacroGoal[]

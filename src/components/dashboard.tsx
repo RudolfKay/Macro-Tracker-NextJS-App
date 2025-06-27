@@ -1,21 +1,15 @@
 "use client"
 import { useState, useEffect } from "react"
-import { signOut, useSession } from "next-auth/react"
+import { signOut } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { ModeToggle } from "@/components/mode-toggle"
 import { useMacroGoal } from "@/hooks/useMacroGoal"
 import { useFoodEntries } from "@/hooks/useFoodEntries"
 import { DatePickerPopover } from "@/components/dashboard/DatePickerPopover"
 import { MacroGoalsCard } from "@/components/dashboard/MacroGoalsCard"
 import { ProgressCard } from "@/components/dashboard/ProgressCard"
 import { FoodLogCard } from "@/components/dashboard/FoodLogCard"
-import { LogOut, User } from "lucide-react"
 
 export function Dashboard() {
-  const { data: session } = useSession()
   const router = useRouter()
 
   // Use today's date in YYYY-MM-DD format
@@ -120,30 +114,6 @@ export function Dashboard() {
           </div>
           <div className="flex items-center gap-4">
             <DatePickerPopover currentDate={currentDate} setCurrentDate={setCurrentDate} />
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm">
-                  <User className="h-4 w-4 mr-2" />
-                  {session?.user?.name || "User"}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href="/profile" className="flex items-center">
-                    <User className="h-4 w-4 mr-2" />
-                    Profile
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout} className="text-red-600 focus:text-red-700">
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Sign Out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <ModeToggle />
           </div>
         </div>
         <MacroGoalsCard

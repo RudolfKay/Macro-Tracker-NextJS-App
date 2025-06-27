@@ -57,10 +57,10 @@ const LoginForm = () => {
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full max-w-md mx-auto border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10">
       <CardHeader>
-        <CardTitle>Sign In</CardTitle>
-        <CardDescription>
+        <CardTitle className="text-center">Sign In</CardTitle>
+        <CardDescription className="text-center">
           Enter your credentials to access your account
         </CardDescription>
       </CardHeader>
