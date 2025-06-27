@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { AuthCard } from "@/components/auth/AuthCard"
 import { FormField } from "@/components/auth/FormField"
+import { useToast } from "@/components/ui/use-toast"
+import { showApiErrorToast } from "@/lib/utils"
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -19,24 +21,23 @@ export default function RegisterPage() {
   })
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const { toast } = useToast()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError("")
     setSuccess("")
     setIsLoading(true)
 
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match")
+      showApiErrorToast(toast, "Passwords do not match")
       setIsLoading(false)
       return
     }
     if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters")
+      showApiErrorToast(toast, "Password must be at least 6 characters")
       setIsLoading(false)
       return
     }
@@ -52,7 +53,7 @@ export default function RegisterPage() {
       });
       const data = await response.json();
       if (!response.ok) {
-        setError(data.error || "Registration failed");
+        showApiErrorToast(toast, data.error || "Registration failed")
       } else {
         setSuccess("Registration successful! Logging you in...");
         const loginResult = await signIn("credentials", {
@@ -61,7 +62,7 @@ export default function RegisterPage() {
           redirect: false,
         });
         if (loginResult?.error) {
-          setError("Registration successful but login failed. Please try logging in manually.");
+          showApiErrorToast(toast, "Registration successful but login failed. Please try logging in manually.")
         } else {
           setTimeout(() => {
             router.push("/dashboard");
@@ -69,7 +70,7 @@ export default function RegisterPage() {
         }
       }
     } catch (err) {
-      setError("An error occurred during registration");
+      showApiErrorToast(toast, err, "An error occurred during registration")
     } finally {
       setIsLoading(false)
     }
@@ -87,16 +88,6 @@ export default function RegisterPage() {
       <div className="w-full max-w-md space-y-4">
         <AuthCard title="Create Account" description="Enter your details to create your MacroTrack account">
           <form onSubmit={handleSubmit} className="space-y-4">
-            {error && (
-              <Alert variant="destructive">
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
-            {success && (
-              <Alert>
-                <AlertDescription>{success}</AlertDescription>
-              </Alert>
-            )}
             <FormField
               label="Full Name"
               id="name"

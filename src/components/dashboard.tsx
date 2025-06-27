@@ -8,9 +8,12 @@ import { DatePickerPopover } from "@/components/dashboard/DatePickerPopover"
 import { MacroGoalsCard } from "@/components/dashboard/MacroGoalsCard"
 import { ProgressCard } from "@/components/dashboard/ProgressCard"
 import { FoodLogCard } from "@/components/dashboard/FoodLogCard"
+import { useToast } from "@/components/ui/use-toast"
+import { showApiErrorToast } from "@/lib/utils"
 
 export function Dashboard() {
   const router = useRouter()
+  const { toast } = useToast()
 
   // Use today's date in YYYY-MM-DD format
   const [currentDate, setCurrentDate] = useState(() => {
@@ -59,6 +62,15 @@ export function Dashboard() {
       })
     }
   }, [macroGoal])
+
+  useEffect(() => {
+    if (macroGoalError) {
+      showApiErrorToast(toast, macroGoalError, "Failed to load macro goals.")
+    }
+    if (foodError) {
+      showApiErrorToast(toast, foodError, "Failed to load food entries.")
+    }
+  }, [macroGoalError, foodError, toast])
 
   // Calculate totals
   const totals = foodEntries.reduce(
