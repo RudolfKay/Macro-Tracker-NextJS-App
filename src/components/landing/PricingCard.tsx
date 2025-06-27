@@ -29,25 +29,26 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 }) => (
   <Card
     className={
-      highlight
+      (highlight
         ? "border-2 border-emerald-500 dark:border-emerald-400 bg-emerald-100/70 dark:bg-emerald-900/40 shadow-lg shadow-emerald-900/10 -translate-y-2 ring-2 ring-emerald-300 dark:ring-emerald-700"
-        : "border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10"
+        : "border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10") +
+      " p-4 sm:p-6"
     }
   >
     <CardHeader>
       {highlight && highlightLabel && (
-        <div className="inline-block rounded-lg bg-emerald-100 px-3 py-1 text-sm text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300">
+        <div className="inline-block rounded-lg bg-emerald-100 px-3 py-1 text-xs sm:text-sm text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300">
           {highlightLabel}
         </div>
       )}
-      <CardTitle>{title}</CardTitle>
-      <div className="text-3xl font-bold">{price}</div>
-      <CardDescription>{description}</CardDescription>
+      <CardTitle className="text-lg sm:text-xl">{title}</CardTitle>
+      <div className="text-2xl sm:text-3xl font-bold">{price}</div>
+      <CardDescription className="text-sm sm:text-base">{description}</CardDescription>
     </CardHeader>
     <CardContent>
       <ul className="grid gap-2">
         {features.map((feature, idx) => (
-          <li key={idx} className="flex items-center gap-2">
+          <li key={idx} className="flex items-center gap-2 text-sm sm:text-base">
             <CheckCircle2 className="h-4 w-4 text-emerald-500" />
             <span>{feature}</span>
           </li>

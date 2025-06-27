@@ -84,8 +84,8 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="py-8 md:py-12 bg-background flex items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-4">
+    <div className="pt-4 pb-8 md:py-12 bg-background overflow-y-auto min-h-screen p-2 sm:p-4">
+      <div className="w-full max-w-md space-y-4 mx-auto">
         <AuthCard title="Create Account" description="Enter your details to create your MacroTrack account">
           <form onSubmit={handleSubmit} className="space-y-4">
             <FormField
@@ -170,7 +170,7 @@ export default function RegisterPage() {
               {isLoading ? "Creating Account..." : "Create Account"}
             </Button>
           </form>
-          <div className="mt-4 text-center text-sm">
+          <div className="mt-4 text-center text-base sm:text-sm">
             Already have an account?{" "}
             <Link href="/login" className="text-emerald-500 hover:underline">
               Sign in
