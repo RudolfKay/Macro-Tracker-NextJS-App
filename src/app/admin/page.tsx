@@ -2,24 +2,14 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { UserRow } from "@/components/admin/UserRow";
 import { EditUserDialog } from "@/components/admin/EditUserDialog";
 import { DeleteUserDialog } from "@/components/admin/DeleteUserDialog";
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  createdAt: string;
-  role: string;
-}
+import type { User } from "@/types/user";
+import { fetchUsers, updateUser, deleteUser } from "@/api/user";
 
 const AdminPanel = () => {
   const { data: session, status } = useSession();
@@ -41,16 +31,15 @@ const AdminPanel = () => {
       router.replace("/dashboard");
       return;
     }
-    fetchUsers();
+    loadUsers();
     // eslint-disable-next-line
   }, [session, status, router]);
 
-  const fetchUsers = async () => {
+  const loadUsers = async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/admin/users");
-      const data = await res.json();
-      setUsers(data);
+      const users = await fetchUsers();
+      setUsers(users);
     } catch {
       setError("Failed to load users");
     } finally {
@@ -73,21 +62,12 @@ const AdminPanel = () => {
     if (!selectedUser) return;
     setFormLoading(true);
     try {
-      const res = await fetch("/api/admin/users", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: selectedUser.id, name: form.name, email: form.email, role: selectedUser.role }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        toast({ title: "User updated!" });
-        setEditOpen(false);
-        fetchUsers();
-      } else {
-        toast({ title: "Error", description: data.error || "Failed to update user", variant: "destructive" });
-      }
-    } catch {
-      toast({ title: "Error", description: "Failed to update user", variant: "destructive" });
+      await updateUser({ id: selectedUser.id, name: form.name, email: form.email, role: selectedUser.role });
+      toast({ title: "User updated!" });
+      setEditOpen(false);
+      loadUsers();
+    } catch (err: any) {
+      toast({ title: "Error", description: err.message || "Failed to update user", variant: "destructive" });
     } finally {
       setFormLoading(false);
     }
@@ -102,21 +82,12 @@ const AdminPanel = () => {
     if (!selectedUser) return;
     setDeleteLoading(true);
     try {
-      const res = await fetch("/api/admin/users", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: selectedUser.id }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        toast({ title: "User deleted!" });
-        setDeleteOpen(false);
-        fetchUsers();
-      } else {
-        toast({ title: "Error", description: data.error || "Failed to delete user", variant: "destructive" });
-      }
-    } catch {
-      toast({ title: "Error", description: "Failed to delete user", variant: "destructive" });
+      await deleteUser(selectedUser.id);
+      toast({ title: "User deleted!" });
+      setDeleteOpen(false);
+      loadUsers();
+    } catch (err: any) {
+      toast({ title: "Error", description: err.message || "Failed to delete user", variant: "destructive" });
     } finally {
       setDeleteLoading(false);
     }

@@ -1,16 +1,12 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import React from "react";
-
-type User = {
-  id: string;
-  name: string;
-};
+import type { User } from "@/types/user";
 
 type DeleteUserDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  user: User | null;
+  user: Pick<User, 'id' | 'name'> | null;
   loading: boolean;
   onCancel: () => void;
   onConfirm: () => void;

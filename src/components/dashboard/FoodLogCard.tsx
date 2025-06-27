@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger } from "@/components/ui/dialog"
 import { Plus, Utensils, Trash2, Edit2 } from "lucide-react"
 import React, { useState } from "react"
-import type { FoodEntry } from "@/api/foodEntry"
+import type { FoodEntry } from "@/types/food-entry"
 import { DashboardFormField } from "@/components/dashboard/DashboardFormField"
 
 type FoodLogCardProps = {

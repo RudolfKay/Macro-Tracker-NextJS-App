@@ -1,14 +1,7 @@
 import { Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import React from "react";
-
-type User = {
-  id: string;
-  name: string;
-  email: string;
-  createdAt: string;
-  role: string;
-};
+import type { User } from "@/types/user";
 
 type UserRowProps = {
   user: User;

@@ -4,6 +4,7 @@ import { authOptions } from '../../auth/[...nextauth]/route';
 import { PrismaClient } from '@prisma/client';
 import path from "path";
 import fs from "fs/promises";
+import type { User } from "@/types/user";
 
 const prisma = new PrismaClient();
 
@@ -24,14 +25,15 @@ export async function GET(request: NextRequest) {
       role: true,
     },
   });
+  // Map to correct type
+  const usersTyped = users.map(u => ({ ...u, createdAt: u.createdAt.toISOString(), role: u.role as import("@/types/user").UserRole }));
   // Sort admin(s) to the top
-  type User = { id: string; name: string; email: string; createdAt: Date; role: string };
-  (users as User[]).sort((a: User, b: User) => {
+  (usersTyped as User[]).sort((a: User, b: User) => {
     if (a.role === 'ADMIN' && b.role !== 'ADMIN') return -1;
     if (a.role !== 'ADMIN' && b.role === 'ADMIN') return 1;
     return 0;
   });
-  return NextResponse.json(users);
+  return NextResponse.json(usersTyped);
 }
 
 export async function PUT(request: NextRequest) {
