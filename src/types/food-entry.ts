@@ -13,7 +13,16 @@ export interface FoodEntry {
   createdAt: string;
 }
 
-/**
- * Input type for creating/updating a food entry.
- */
-export type FoodEntryInput = Omit<FoodEntry, "id" | "createdAt">; 
+import { z } from "zod";
+
+export const FoodEntrySchema = z.object({
+  name: z.string().min(0),
+  protein: z.number().min(0),
+  carbs: z.number().min(0),
+  fat: z.number().min(0),
+  calories: z.number().min(0),
+  time: z.string(),
+  date: z.string(),
+});
+
+export type FoodEntryInput = z.infer<typeof FoodEntrySchema>; 

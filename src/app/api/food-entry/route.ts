@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { FoodEntrySchema } from "@/types/food-entry";
 
 // GET /api/food-entry?date=YYYY-MM-DD
 export async function GET(request: NextRequest) {
@@ -36,9 +37,14 @@ export async function POST(request: NextRequest) {
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const { name, protein, carbs, fat, calories, time, date } = await request.json();
-  if (!name || !time || !date || [protein, carbs, fat, calories].some((v) => typeof v !== "number" || v < 0)) {
-    return NextResponse.json({ error: "All fields are required and must be valid." }, { status: 400 });
+  const body = await request.json();
+  const result = FoodEntrySchema.safeParse(body);
+  if (!result.success) {
+    return NextResponse.json({ error: "All food entry values must be zero or positive numbers", details: result.error.errors }, { status: 400 });
+  }
+  let { name, protein, carbs, fat, calories, time, date } = result.data;
+  if (!name || name.trim() === "") {
+    name = "Unknown";
   }
   const entry = await prisma.foodEntry.create({
     data: {
@@ -61,12 +67,20 @@ export async function PUT(request: NextRequest) {
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const { id, name, protein, carbs, fat, calories, time } = await request.json();
-  if (!id || !name || !time || [protein, carbs, fat, calories].some((v) => typeof v !== "number" || v < 0)) {
-    return NextResponse.json({ error: "All fields are required and must be valid." }, { status: 400 });
+  const body = await request.json();
+  if (!body.id) {
+    return NextResponse.json({ error: "Entry id is required." }, { status: 400 });
+  }
+  const result = FoodEntrySchema.safeParse(body);
+  if (!result.success) {
+    return NextResponse.json({ error: "All food entry values must be zero or positive numbers.", details: result.error.errors }, { status: 400 });
+  }
+  let { name, protein, carbs, fat, calories, time } = result.data;
+  if (!name || name.trim() === "") {
+    name = "Unknown";
   }
   const entry = await prisma.foodEntry.update({
-    where: { id },
+    where: { id: body.id },
     data: { name, protein, carbs, fat, calories, time },
   });
   return NextResponse.json({ entry });
