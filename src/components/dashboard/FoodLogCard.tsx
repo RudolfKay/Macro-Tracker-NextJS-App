@@ -37,13 +37,12 @@ export const FoodLogCard: React.FC<FoodLogCardProps> = ({
 
   const handleAddFood = async () => {
     if (
-      !newFood.name ||
       Number(newFood.protein) < 0 ||
       Number(newFood.carbs) < 0 ||
       Number(newFood.fat) < 0 ||
       Number(newFood.calories) < 0
     ) {
-      setFormError("All food entry values must be zero or positive numbers and name is required.")
+      setFormError("All food entry values must be zero or positive numbers.")
       return
     }
     setFormError(null)
@@ -74,13 +73,12 @@ export const FoodLogCard: React.FC<FoodLogCardProps> = ({
 
   const handleEditSave = async () => {
     if (
-      !editFood.name ||
       Number(editFood.protein) < 0 ||
       Number(editFood.carbs) < 0 ||
       Number(editFood.fat) < 0 ||
       Number(editFood.calories) < 0
     ) {
-      setEditError("All food entry values must be zero or positive numbers and name is required.")
+      setEditError("All food entry values must be zero or positive numbers.")
       return
     }
     setEditError(null)
@@ -280,7 +278,11 @@ export const FoodLogCard: React.FC<FoodLogCardProps> = ({
                 <div className="flex-1">
                   <div className="flex items-center gap-3">
                     <span className="text-sm text-muted-foreground">{entry.time}</span>
-                    <h4 className="font-medium">{entry.name || "Unknown"}</h4>
+                    {entry.name === "Unknown" ? (
+                      <span className="italic text-muted-foreground" aria-label="Unknown food entry">Unknown</span>
+                    ) : (
+                      <h4 className="font-medium">{entry.name}</h4>
+                    )}
                   </div>
                   <div className="flex gap-4 mt-1 text-sm text-muted-foreground">
                     <span>P: {entry.protein}g</span>

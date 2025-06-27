@@ -3,6 +3,14 @@ import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import bcrypt from "bcryptjs";
+import { z } from "zod";
+
+const ProfileUpdateSchema = z.object({
+  name: z.string(),
+  email: z.string().email(),
+  newPassword: z.string().min(6).optional(),
+  currentPassword: z.string().min(1),
+});
 
 export async function POST(request: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -10,10 +18,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { name, email, newPassword, currentPassword } = await request.json();
-  if (!currentPassword) {
-    return NextResponse.json({ error: "Current password is required to confirm changes." }, { status: 400 });
+  const body = await request.json();
+  const result = ProfileUpdateSchema.safeParse(body);
+  if (!result.success) {
+    return NextResponse.json({ error: "All fields are required and must be valid.", details: result.error.errors }, { status: 400 });
   }
+  const { name, email, newPassword, currentPassword } = result.data;
 
   const user = await prisma.user.findUnique({ where: { email: session.user.email } });
   if (!user) {

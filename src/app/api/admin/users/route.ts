@@ -5,6 +5,8 @@ import { PrismaClient } from '@prisma/client';
 import path from "path";
 import fs from "fs/promises";
 import type { User } from "@/types/user";
+import { UserSchema } from "@/types/user";
+import { z } from "zod";
 
 const prisma = new PrismaClient();
 
@@ -41,7 +43,14 @@ export async function PUT(request: NextRequest) {
   if (!session || session.user.role !== 'ADMIN') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-  const { id, name, email, role } = await request.json();
+  const body = await request.json();
+  // Only validate updatable fields
+  const UpdateUserSchema = UserSchema.pick({ id: true, name: true, email: true, role: true });
+  const result = UpdateUserSchema.safeParse(body);
+  if (!result.success) {
+    return NextResponse.json({ error: 'All fields are required and must be valid.', details: result.error.errors }, { status: 400 });
+  }
+  const { id, name, email, role } = result.data;
   const user = await prisma.user.update({
     where: { id },
     data: { name, email, role },
@@ -54,7 +63,13 @@ export async function DELETE(request: NextRequest) {
   if (!session || session.user.role !== 'ADMIN') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-  const { id } = await request.json();
+  const body = await request.json();
+  const DeleteUserSchema = z.object({ id: z.string() });
+  const result = DeleteUserSchema.safeParse(body);
+  if (!result.success) {
+    return NextResponse.json({ error: 'User id is required.', details: result.error.errors }, { status: 400 });
+  }
+  const { id } = result.data;
   // Fetch user to get profileImage path
   const user = await prisma.user.findUnique({ where: { id } });
   if (user?.profileImage) {

@@ -12,7 +12,13 @@ export interface MacroGoal {
   isActive: boolean;
 }
 
-/**
- * Input type for creating/updating a macro goal.
- */
-export type MacroGoalInput = Omit<MacroGoal, "id" | "createdAt" | "updatedAt" | "isActive">; 
+import { z } from "zod";
+
+export const MacroGoalSchema = z.object({
+  protein: z.number().min(0),
+  carbs: z.number().min(0),
+  fat: z.number().min(0),
+  calories: z.number().min(0),
+});
+
+export type MacroGoalInput = z.infer<typeof MacroGoalSchema>; 

@@ -2,6 +2,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import prisma from "@/lib/prisma";
+import { MacroGoalSchema } from "@/types/macro-goal";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
@@ -20,10 +21,12 @@ export async function POST(request: NextRequest) {
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const { protein, carbs, fat, calories } = await request.json();
-  if ([protein, carbs, fat, calories].some((v) => typeof v !== "number" || v < 0)) {
-    return NextResponse.json({ error: "All macro values must be non-negative numbers." }, { status: 400 });
+  const body = await request.json();
+  const result = MacroGoalSchema.safeParse(body);
+  if (!result.success) {
+    return NextResponse.json({ error: "All macro values must be non-negative numbers.", details: result.error.errors }, { status: 400 });
   }
+  const { protein, carbs, fat, calories } = result.data;
   // Deactivate previous goals
   await prisma.macroGoal.updateMany({
     where: { userId: session.user.id, isActive: true },
