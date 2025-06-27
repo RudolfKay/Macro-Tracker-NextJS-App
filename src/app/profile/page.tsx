@@ -2,17 +2,10 @@
 
 import { useSession } from "next-auth/react";
 import { useState, useRef, useEffect } from "react";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ProtectedRoute from "@/components/auth/protected-route";
-import Link from "next/link";
 import { useToast } from "@/components/ui/use-toast";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { ProfileCard } from "@/components/profile/ProfileCard";
 import { ProfilePhoto } from "@/components/profile/ProfilePhoto";
 import { EditProfileDialog } from "@/components/profile/EditProfileDialog";
@@ -140,12 +133,11 @@ const ProfilePage = () => {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen flex flex-col items-center justify-center bg-background p-4">
+      <div className="mt-16 flex flex-col items-center justify-center bg-background p-4">
         <ProfileCard name={session.user.name || ""} email={session.user.email || ""}>
           <ProfilePhoto
             src={(session.user as any)?.profileImage || session.user.image || "/avatar.svg"}
             preview={preview}
-            isDefault={isDefaultAvatar}
             uploading={uploading}
             onClick={handlePhotoClick}
             onFileChange={handleFileChange}

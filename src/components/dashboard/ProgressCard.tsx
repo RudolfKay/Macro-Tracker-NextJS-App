@@ -3,13 +3,8 @@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { TrendingUp } from "lucide-react"
-
-interface MacroGoals {
-  protein: number
-  carbs: number
-  fat: number
-  calories: number
-}
+import type { MacroGoal } from "@/types/macro-goal";
+type MacroGoals = Pick<MacroGoal, 'protein' | 'carbs' | 'fat' | 'calories'>;
 
 interface ProgressCardProps {
   totals: MacroGoals

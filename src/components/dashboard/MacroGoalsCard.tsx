@@ -5,13 +5,8 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger } from "@/components/ui/dialog"
 import { Edit2, Target } from "lucide-react"
 import { DashboardFormField } from "@/components/dashboard/DashboardFormField"
-
-interface MacroGoals {
-  protein: number
-  carbs: number
-  fat: number
-  calories: number
-}
+import type { MacroGoal } from "@/types/macro-goal";
+type MacroGoals = Pick<MacroGoal, 'protein' | 'carbs' | 'fat' | 'calories'>;
 
 interface MacroGoalsCardProps {
   macroGoal: MacroGoals | null | undefined
