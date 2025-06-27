@@ -10,6 +10,7 @@ import { EditUserDialog } from "@/components/admin/EditUserDialog";
 import { DeleteUserDialog } from "@/components/admin/DeleteUserDialog";
 import type { User } from "@/types/user";
 import { fetchUsers, updateUser, deleteUser } from "@/api/user";
+import { showApiErrorToast } from "@/lib/utils";
 
 const AdminPanel = () => {
   const { data: session, status } = useSession();
@@ -67,7 +68,7 @@ const AdminPanel = () => {
       setEditOpen(false);
       loadUsers();
     } catch (err: any) {
-      toast({ title: "Error", description: err.message || "Failed to update user", variant: "destructive" });
+      showApiErrorToast(toast, err, "Failed to update user");
     } finally {
       setFormLoading(false);
     }
@@ -87,7 +88,7 @@ const AdminPanel = () => {
       setDeleteOpen(false);
       loadUsers();
     } catch (err: any) {
-      toast({ title: "Error", description: err.message || "Failed to delete user", variant: "destructive" });
+      showApiErrorToast(toast, err, "Failed to delete user");
     } finally {
       setDeleteLoading(false);
     }

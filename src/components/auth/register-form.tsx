@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useToast } from "@/components/ui/use-toast";
+import { showApiErrorToast } from "@/lib/utils";
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -16,9 +18,9 @@ const RegisterForm = () => {
     confirmPassword: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const router = useRouter();
+  const { toast } = useToast();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -31,18 +33,17 @@ const RegisterForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError("");
     setSuccess("");
 
     // Basic validation
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
+      showApiErrorToast(toast, "Passwords do not match");
       setIsLoading(false);
       return;
     }
 
     if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters long");
+      showApiErrorToast(toast, "Password must be at least 6 characters long");
       setIsLoading(false);
       return;
     }
@@ -63,7 +64,7 @@ const RegisterForm = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || "Registration failed");
+        showApiErrorToast(toast, data.error || "Registration failed");
       } else {
         setSuccess("Registration successful! You can now log in.");
         setFormData({
@@ -78,7 +79,7 @@ const RegisterForm = () => {
         }, 2000);
       }
     } catch (err) {
-      setError("An error occurred during registration");
+      showApiErrorToast(toast, err, "An error occurred during registration");
     } finally {
       setIsLoading(false);
     }
@@ -94,11 +95,6 @@ const RegisterForm = () => {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-          {error && (
-            <Alert variant="destructive">
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
           {success && (
             <Alert>
               <AlertDescription>{success}</AlertDescription>

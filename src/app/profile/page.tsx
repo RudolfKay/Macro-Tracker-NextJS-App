@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { ProfileCard } from "@/components/profile/ProfileCard";
 import { ProfilePhoto } from "@/components/profile/ProfilePhoto";
 import { EditProfileDialog } from "@/components/profile/EditProfileDialog";
+import { showApiErrorToast } from "@/lib/utils";
 
 const ProfilePage = () => {
   const { data: session, update } = useSession();
@@ -72,10 +73,10 @@ const ProfilePage = () => {
           toast({ title: "Profile photo updated!" });
           await update();
         } else {
-          toast({ title: "Error", description: data.error || "Failed to upload photo", variant: "destructive" });
+          showApiErrorToast(toast, data.error || "Failed to upload photo");
         }
       } catch (err) {
-        toast({ title: "Error", description: "Failed to upload photo", variant: "destructive" });
+        showApiErrorToast(toast, err, "Failed to upload photo");
       } finally {
         setUploading(false);
       }
@@ -92,10 +93,10 @@ const ProfilePage = () => {
         setPreview(null);
         await update();
       } else {
-        toast({ title: "Error", description: data.error || "Failed to remove photo", variant: "destructive" });
+        showApiErrorToast(toast, data.error || "Failed to remove photo");
       }
     } catch (err) {
-      toast({ title: "Error", description: "Failed to remove photo", variant: "destructive" });
+      showApiErrorToast(toast, err, "Failed to remove photo");
     } finally {
       setUploading(false);
     }
@@ -120,12 +121,12 @@ const ProfilePage = () => {
         setEditOpen(false);
         await update();
       } else if (res.status === 404) {
-        toast({ title: "Error", description: "Profile update endpoint not found (404)", variant: "destructive" });
+        showApiErrorToast(toast, "Profile update endpoint not found (404)");
       } else {
-        toast({ title: "Error", description: data.error || "Failed to update profile. Current password is required to confirm changes.", variant: "destructive" });
+        showApiErrorToast(toast, data.error || "Failed to update profile. Current password is required to confirm changes.");
       }
     } catch (err) {
-      toast({ title: "Error", description: "Failed to update profile. Current password is required to confirm changes.", variant: "destructive" });
+      showApiErrorToast(toast, err, "Failed to update profile. Current password is required to confirm changes.");
     } finally {
       setFormLoading(false);
     }

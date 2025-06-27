@@ -9,13 +9,15 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Eye, EyeOff } from "lucide-react";
 import { AuthCard } from "@/components/auth/AuthCard";
 import { FormField } from "@/components/auth/FormField";
+import { useToast } from "@/components/ui/use-toast";
+import { showApiErrorToast } from "@/lib/utils";
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
   const router = useRouter();
+  const { toast } = useToast();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -24,7 +26,6 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError("");
     try {
       const result = await signIn("credentials", {
         email: formData.email,
@@ -32,12 +33,12 @@ export default function LoginPage() {
         redirect: false,
       });
       if (result?.error) {
-        setError("Invalid email or password");
+        showApiErrorToast(toast, "Invalid email or password");
       } else {
         router.push("/dashboard");
       }
     } catch (err) {
-      setError("An error occurred during login");
+      showApiErrorToast(toast, err, "An error occurred during login");
     } finally {
       setIsLoading(false);
     }
@@ -48,11 +49,6 @@ export default function LoginPage() {
       <div className="w-full max-w-md space-y-4">
         <AuthCard title="Sign In" description="Enter your credentials to access your account">
           <form onSubmit={handleSubmit} className="space-y-4">
-            {error && (
-              <Alert variant="destructive">
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
             <FormField
               label="Email"
               id="email"
