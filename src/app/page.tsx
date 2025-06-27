@@ -118,59 +118,62 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
       <main className="flex-1">
-        <section className="w-full py-12 md:py-16 lg:py-20 xl:py-24">
-          <div className="container px-4 md:px-6">
-            <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
+        <section className="w-full py-8 px-2 sm:py-12 sm:px-4 md:py-16 md:px-6 lg:py-20 xl:py-24">
+          <div className="container mx-auto max-w-7xl px-0 sm:px-4 md:px-6">
+            <div className="grid gap-8 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px] items-center">
               <div className="flex flex-col justify-center items-center text-center space-y-4">
                 <div className="space-y-4">
-                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none drop-shadow-lg">
+                  <h1 className="text-2xl sm:text-3xl md:text-5xl xl:text-6xl/none font-bold tracking-tighter drop-shadow-lg">
                     Track Your Macros, Achieve Your Goals
                   </h1>
-                  <p className="text-muted-foreground md:text-xl">
+                  <p className="text-muted-foreground text-base sm:text-lg md:text-xl">
                     The smart way to monitor your nutrition. <br />Personalized macro tracking that adapts to your lifestyle
                     and fitness goals.
                   </p>
                 </div>
-                <div className="flex flex-col gap-2 min-[400px]:flex-row">
+                <div className="flex flex-col gap-2 w-full min-[400px]:flex-row justify-center">
                   <SignupRedirectButton icon={<ChevronRight className="h-4 w-4" />}>
                     Get Started
                   </SignupRedirectButton>
-                  <Button variant="outline" size="lg" asChild>
+                  <Button variant="outline" size="lg" asChild className="w-full min-[400px]:w-auto">
                     <Link href="#features">Learn More</Link>
                   </Button>
                 </div>
               </div>
-              <Image
-                src="/food-hero.jpg"
-                width={550}
-                height={550}
-                alt="Landing Page Image"
-                className="mx-auto aspect-video overflow-hidden rounded-xl object-cover sm:w-full lg:order-last lg:aspect-square"
-              />
+              <div className="w-full flex justify-center lg:order-last">
+                <Image
+                  src="/food-hero.jpg"
+                  width={550}
+                  height={550}
+                  alt="Landing Page Image"
+                  className="mx-auto aspect-video overflow-hidden rounded-xl object-cover w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-full lg:aspect-square"
+                  priority
+                />
+              </div>
             </div>
           </div>
         </section>
 
-        <section id="features" className="w-full py-12 md:py-24 lg:py-32 relative">
+        <section id="features" className="w-full py-8 px-2 sm:py-12 sm:px-4 md:py-24 md:px-6 lg:py-32 relative">
           <div className="absolute inset-0 z-0">
             <div className="w-full h-full bg-black/40 absolute inset-0 z-10" />
             <Image src="/bg-features.jpg" alt="Delicious Food" fill priority className="object-cover w-full h-full" />
           </div>
-          <div className="container px-4 md:px-6 relative z-20">
+          <div className="container mx-auto max-w-7xl px-0 sm:px-4 md:px-6 relative z-20">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <div className="inline-block rounded-lg bg-emerald-100 px-3 py-1 text-sm text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300">
                   Features
                 </div>
-                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl text-white drop-shadow-lg">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl text-white drop-shadow-lg">
                   Everything You Need to Track Your Nutrition
                 </h2>
-                <p className="max-w-[900px] md:text-xl text-gray-100 drop-shadow">
+                <p className="max-w-[900px] text-base sm:text-lg md:text-xl text-gray-100 drop-shadow">
                   Simple tools to set your macro goals and track your daily food intake with precision.
                 </p>
               </div>
             </div>
-            <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 md:grid-cols-2 lg:grid-cols-3">
+            <div className="mx-auto grid max-w-5xl items-center gap-6 py-8 sm:py-12 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               {features.map((feature, idx) => (
                 <FeatureCard key={idx} {...feature} />
               ))}
@@ -178,20 +181,20 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="how-it-works" className="w-full py-12 md:py-24 lg:py-32">
-          <div className="container px-4 md:px-6">
+        <section id="how-it-works" className="w-full py-8 px-2 sm:py-12 sm:px-4 md:py-24 md:px-6 lg:py-32">
+          <div className="container mx-auto max-w-7xl px-0 sm:px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <div className="inline-block rounded-lg bg-emerald-100 px-3 py-1 text-sm text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300">
                   How It Works
                 </div>
-                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl drop-shadow-lg">Simple Steps to Nutritional Success</h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl drop-shadow-lg">Simple Steps to Nutritional Success</h2>
+                <p className="max-w-[900px] text-base sm:text-lg md:text-xl text-muted-foreground">
                   Getting started with MacroTrack is easy. Follow these simple steps to begin your journey.
                 </p>
               </div>
             </div>
-            <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 md:grid-cols-3">
+            <div className="mx-auto grid max-w-5xl items-center gap-6 py-8 sm:py-12 grid-cols-1 md:grid-cols-3">
               {howItWorksSteps.map((step, idx) => (
                 <HowItWorksStep key={idx} {...step} />
               ))}
@@ -199,26 +202,26 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="testimonials" className="w-full py-12 md:py-24 lg:py-32 relative">
+        <section id="testimonials" className="w-full py-8 px-2 sm:py-12 sm:px-4 md:py-24 md:px-6 lg:py-32 relative">
           <div className="absolute inset-0 z-0">
             <div className="w-full h-full bg-black/40 absolute inset-0 z-10" />
             <Image src="/bg-testimonials.jpg" alt="Wellness Lake Background" fill priority className="object-cover w-full h-full" />
           </div>
-          <div className="container px-4 md:px-6 relative z-20">
+          <div className="container mx-auto max-w-7xl px-0 sm:px-4 md:px-6 relative z-20">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <div className="inline-block rounded-lg bg-emerald-100 px-3 py-1 text-sm text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300">
                   Testimonials
                 </div>
-                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl text-white drop-shadow-lg">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl text-white drop-shadow-lg">
                   Loved by Fitness Enthusiasts
                 </h2>
-                <p className="max-w-[900px] md:text-xl text-gray-100 drop-shadow">
+                <p className="max-w-[900px] text-base sm:text-lg md:text-xl text-gray-100 drop-shadow">
                   See what our users have to say about their experience with MacroTrack.
                 </p>
               </div>
             </div>
-            <div className="mx-auto grid max-w-5xl gap-6 py-12 md:grid-cols-2 lg:grid-cols-3">
+            <div className="mx-auto grid max-w-5xl gap-6 py-8 sm:py-12 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               {testimonials.map((testimonial, idx) => (
                 <TestimonialCard key={idx} {...testimonial} />
               ))}
@@ -226,20 +229,20 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="pricing" className="w-full py-12 md:py-24 lg:py-32">
-          <div className="container px-4 md:px-6">
+        <section id="pricing" className="w-full py-8 px-2 sm:py-12 sm:px-4 md:py-24 md:px-6 lg:py-32">
+          <div className="container mx-auto max-w-7xl px-0 sm:px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <div className="inline-block rounded-lg bg-emerald-100 px-3 py-1 text-sm text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300">
                   Pricing
                 </div>
-                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl drop-shadow-lg">Simple, Transparent Pricing</h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl drop-shadow-lg">Simple, Transparent Pricing</h2>
+                <p className="max-w-[900px] text-base sm:text-lg md:text-xl text-muted-foreground">
                   Choose the plan that fits your needs. All plans include core tracking features.
                 </p>
               </div>
             </div>
-            <div className="mx-auto grid max-w-5xl gap-6 py-12 md:grid-cols-3">
+            <div className="mx-auto grid max-w-5xl gap-6 py-8 sm:py-12 grid-cols-1 md:grid-cols-3">
               {pricingPlans.map((plan, idx) => (
                 <PricingCard
                   key={idx}
@@ -262,40 +265,40 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-emerald-50 dark:bg-emerald-900/30">
-          <div className="container grid items-center gap-6 px-4 md:px-6 lg:grid-cols-2 lg:gap-10">
+        <section className="w-full py-8 px-2 sm:py-12 sm:px-4 md:py-24 md:px-6 lg:py-32 bg-emerald-50 dark:bg-emerald-900/30">
+          <div className="container grid items-center gap-6 px-0 sm:px-4 md:px-6 lg:grid-cols-2 lg:gap-10">
             <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight drop-shadow-lg">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl/tight drop-shadow-lg">
                 Ready to transform your nutrition?
               </h2>
-              <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+              <p className="max-w-[600px] text-base sm:text-lg md:text-xl text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                 Join thousands of users who have already improved their health and fitness with MacroTrack.
               </p>
             </div>
-            <div className="flex flex-col gap-2 min-[400px]:flex-row lg:justify-end">
+            <div className="flex flex-col gap-2 w-full min-[400px]:flex-row lg:justify-end">
               <SignupRedirectButton icon={<ArrowRight className="h-4 w-4" />}>
                 Get Started
               </SignupRedirectButton>
-              <Button variant="outline" size="lg" asChild>
+              <Button variant="outline" size="lg" asChild className="w-full min-[400px]:w-auto">
                 <Link href="#features">Learn More</Link>
               </Button>
             </div>
           </div>
         </section>
 
-        <section className="w-full py-12 md:py-24 lg:py-32 border-t">
-          <div className="container px-4 md:px-6">
+        <section className="w-full py-8 px-2 sm:py-12 sm:px-4 md:py-24 md:px-6 lg:py-32 border-t">
+          <div className="container px-0 sm:px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl drop-shadow-lg">Stay Updated</h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl drop-shadow-lg">Stay Updated</h2>
+                <p className="max-w-[900px] text-base sm:text-lg md:text-xl text-muted-foreground">
                   Subscribe to our newsletter for tips, updates, and exclusive offers.
                 </p>
               </div>
               <div className="mx-auto w-full max-w-sm space-y-2">
-                <form className="flex space-x-2">
+                <form className="flex flex-col gap-2 sm:flex-row sm:space-x-2">
                   <Input type="email" placeholder="Enter your email" className="max-w-lg flex-1 bg-white text-gray-900" />
-                  <Button type="submit">Subscribe</Button>
+                  <Button type="submit" className="w-full sm:w-auto">Subscribe</Button>
                 </form>
                 <p className="text-xs text-muted-foreground">We respect your privacy. Unsubscribe at any time.</p>
               </div>
@@ -304,12 +307,12 @@ export default function Home() {
         </section>
       </main>
       <footer className="w-full border-t bg-background">
-        <div className="container flex flex-col items-center justify-between gap-4 py-10 md:h-24 md:flex-row md:py-0">
+        <div className="container flex flex-col items-center justify-between gap-4 py-10 md:h-24 md:flex-row md:py-0 px-2 sm:px-4 md:px-6">
           <div className="flex items-center gap-2">
             <BarChart3 className="h-6 w-6 text-emerald-500" />
             <p className="text-sm font-medium">© {new Date().getFullYear()} MacroTrack. All rights reserved.</p>
           </div>
-          <div className="flex gap-4">
+          <div className="flex flex-col gap-2 md:flex-row md:gap-4">
             <Link href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground">
               Terms
             </Link>
