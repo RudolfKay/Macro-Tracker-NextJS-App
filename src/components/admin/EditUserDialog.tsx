@@ -16,7 +16,7 @@ type EditUserDialogProps = {
 
 export const EditUserDialog: React.FC<EditUserDialogProps> = ({ open, onOpenChange, form, onChange, onSubmit, loading, onCancel }) => (
   <Dialog open={open} onOpenChange={onOpenChange}>
-    <DialogContent>
+    <DialogContent className="max-w-xs sm:max-w-md w-full p-4 sm:p-6">
       <DialogHeader>
         <DialogTitle>Edit User</DialogTitle>
       </DialogHeader>
@@ -29,7 +29,7 @@ export const EditUserDialog: React.FC<EditUserDialogProps> = ({ open, onOpenChan
           <Label htmlFor="email">Email</Label>
           <Input id="email" name="email" type="email" value={form.email} onChange={onChange} required disabled={loading} />
         </div>
-        <DialogFooter className="flex flex-row gap-2 justify-end">
+        <DialogFooter className="flex flex-col sm:flex-row gap-2 justify-end">
           <DialogClose asChild>
             <Button type="button" variant="ghost" disabled={loading} onClick={onCancel}>Cancel</Button>
           </DialogClose>

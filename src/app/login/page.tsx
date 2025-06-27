@@ -45,8 +45,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="py-8 md:py-12 bg-background flex items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-4">
+    <div className="pt-4 pb-8 md:py-12 bg-background overflow-y-auto min-h-screen p-2 sm:p-4">
+      <div className="w-full max-w-md space-y-4 mx-auto">
         <AuthCard title="Sign In" description="Enter your credentials to access your account">
           <form onSubmit={handleSubmit} className="space-y-4">
             <FormField
@@ -94,7 +94,7 @@ export default function LoginPage() {
           </form>
           <div className="text-center text-sm mt-4">
             Don't have an account?{" "}
-            <Link href="/signup" className="text-emerald-500 hover:underline">
+            <Link href="/signup" className="text-emerald-500 hover:underline text-base sm:text-sm">
               Sign up
             </Link>
           </div>

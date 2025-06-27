@@ -98,16 +98,16 @@ const AdminPanel = () => {
   if (error) return <div className="p-8 text-red-500">{error}</div>;
 
   return (
-    <div className="max-w-2xl mx-auto mt-10 p-6 bg-white dark:bg-neutral-900 rounded-lg border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10">
-      <div className="flex items-center justify-between mb-6">
-        <Button asChild variant="outline" className="flex items-center gap-2">
+    <div className="max-w-2xl w-full mx-auto mt-6 sm:mt-10 p-2 sm:p-6 bg-white dark:bg-neutral-900 rounded-lg border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
+        <Button asChild variant="outline" className="flex items-center gap-2 w-full sm:w-auto">
           <Link href="/dashboard" aria-label="Back to Dashboard">
             <span aria-hidden="true">&larr;</span> Dashboard
           </Link>
         </Button>
-        <span className="text-2xl font-bold">Admin Panel</span>
+        <span className="text-xl sm:text-2xl font-bold text-center w-full sm:w-auto">Admin Panel</span>
       </div>
-      <div className="divide-y divide-neutral-200 dark:divide-neutral-700">
+      <div>
         {users.map((user) => (
           <UserRow
             key={user.id}
