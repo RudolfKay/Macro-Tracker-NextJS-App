@@ -115,10 +115,10 @@ export const FoodLogCard: React.FC<FoodLogCardProps> = ({
               Add Food
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent aria-describedby="add-food-description">
             <DialogHeader>
               <DialogTitle>Add Food Entry</DialogTitle>
-              <DialogDescription>Enter the nutritional information for your food</DialogDescription>
+              <DialogDescription id="add-food-description">Enter the nutritional information for your food</DialogDescription>
             </DialogHeader>
             {formError && (
               <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4 text-center font-semibold">
@@ -188,10 +188,10 @@ export const FoodLogCard: React.FC<FoodLogCardProps> = ({
           </DialogContent>
         </Dialog>
         <Dialog open={!!editingEntry} onOpenChange={open => !open && setEditingEntry(null)}>
-          <DialogContent>
+          <DialogContent aria-describedby="edit-food-description">
             <DialogHeader>
               <DialogTitle>Edit Food Entry</DialogTitle>
-              <DialogDescription>Update the nutritional information for your food</DialogDescription>
+              <DialogDescription id="edit-food-description">Update the nutritional information for your food</DialogDescription>
             </DialogHeader>
             {editError && (
               <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4 text-center font-semibold">

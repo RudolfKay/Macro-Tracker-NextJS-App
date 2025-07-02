@@ -10,11 +10,11 @@ import { ProfileCard } from "@/components/profile/ProfileCard";
 import { ProfilePhoto } from "@/components/profile/ProfilePhoto";
 import { EditProfileDialog } from "@/components/profile/EditProfileDialog";
 import { showApiErrorToast } from "@/lib/utils";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const ProfilePage = () => {
   const { data: session, update } = useSession();
   const [preview, setPreview] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const router = useRouter();
@@ -25,8 +25,73 @@ const ProfilePage = () => {
     newPassword: "",
     currentPassword: "",
   });
-  const [formLoading, setFormLoading] = useState(false);
   const [isDefaultAvatar, setIsDefaultAvatar] = useState(false);
+  const queryClient = useQueryClient();
+  const [formError, setFormError] = useState<string | null>(null);
+
+  // React Query mutations
+  const uploadPhotoMutation = useMutation({
+    mutationFn: async (file: File) => {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch("/api/profile/photo", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to upload photo");
+      return data;
+    },
+    onSuccess: async () => {
+      toast({ title: "Profile photo updated!" });
+      setPreview(null);
+      await update();
+      queryClient.invalidateQueries();
+    },
+    onError: (err: any) => {
+      showApiErrorToast(toast, err, "Failed to upload photo");
+    },
+  });
+
+  const deletePhotoMutation = useMutation({
+    mutationFn: async () => {
+      const res = await fetch("/api/profile/photo/delete", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to remove photo");
+      return data;
+    },
+    onSuccess: async () => {
+      toast({ title: "Profile photo removed!" });
+      setPreview(null);
+      await update();
+      queryClient.invalidateQueries();
+    },
+    onError: (err: any) => {
+      showApiErrorToast(toast, err, "Failed to remove photo");
+    },
+  });
+
+  const updateProfileMutation = useMutation({
+    mutationFn: async (form: { name: string; email: string; newPassword: string; currentPassword: string }) => {
+      const res = await fetch("/api/profile/update", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to update profile");
+      return data;
+    },
+    onSuccess: async () => {
+      toast({ title: "Profile updated!" });
+      setEditOpen(false);
+      await update();
+      queryClient.invalidateQueries();
+    },
+    onError: (err: any) => {
+      showApiErrorToast(toast, err, "Failed to update profile. Current password is required to confirm changes.");
+    },
+  });
 
   useEffect(() => {
     if (session?.user) {
@@ -55,81 +120,55 @@ const ProfilePage = () => {
     setIsDefaultAvatar(true);
   };
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setPreview(URL.createObjectURL(file));
       setIsDefaultAvatar(false);
-      setUploading(true);
-      const formData = new FormData();
-      formData.append("file", file);
-      try {
-        const res = await fetch("/api/profile/photo", {
-          method: "POST",
-          body: formData,
-        });
-        const data = await res.json();
-        if (res.ok) {
-          toast({ title: "Profile photo updated!" });
-          await update();
-        } else {
-          showApiErrorToast(toast, data.error || "Failed to upload photo");
-        }
-      } catch (err) {
-        showApiErrorToast(toast, err, "Failed to upload photo");
-      } finally {
-        setUploading(false);
-      }
+      uploadPhotoMutation.mutate(file);
     }
   };
 
-  const handleRemovePhoto = async () => {
-    setUploading(true);
-    try {
-      const res = await fetch("/api/profile/photo/delete", { method: "POST" });
-      const data = await res.json();
-      if (res.ok) {
-        toast({ title: "Profile photo removed!" });
-        setPreview(null);
-        await update();
-      } else {
-        showApiErrorToast(toast, data.error || "Failed to remove photo");
-      }
-    } catch (err) {
-      showApiErrorToast(toast, err, "Failed to remove photo");
-    } finally {
-      setUploading(false);
-    }
+  const handleRemovePhoto = () => {
+    deletePhotoMutation.mutate();
   };
 
   const handleEditChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleEditSubmit = async (e: React.FormEvent) => {
+  const handleOpenEdit = () => {
+    setForm(f => ({
+      ...f,
+      newPassword: "",
+      currentPassword: "",
+    }));
+    setEditOpen(true);
+  };
+
+  const handleCloseEdit = () => {
+    setEditOpen(false);
+    setForm(f => ({
+      ...f,
+      newPassword: "",
+      currentPassword: "",
+    }));
+    setFormError(null);
+  };
+
+  const handleEditSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setFormLoading(true);
-    try {
-      const res = await fetch("/api/profile/update", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        toast({ title: "Profile updated!" });
-        setEditOpen(false);
-        await update();
-      } else if (res.status === 404) {
-        showApiErrorToast(toast, "Profile update endpoint not found (404)");
-      } else {
-        showApiErrorToast(toast, data.error || "Failed to update profile. Current password is required to confirm changes.");
-      }
-    } catch (err) {
-      showApiErrorToast(toast, err, "Failed to update profile. Current password is required to confirm changes.");
-    } finally {
-      setFormLoading(false);
+    // Only validate newPassword if present
+    if (form.newPassword && form.newPassword.length < 6) {
+      setFormError("New password must be at least 6 characters long.");
+      return;
     }
+    setFormError(null);
+    updateProfileMutation.mutate(form, {
+      onSuccess: () => {
+        handleCloseEdit();
+      },
+    });
   };
 
   return (
@@ -139,26 +178,29 @@ const ProfilePage = () => {
           <ProfilePhoto
             src={(session.user as any)?.profileImage || session.user.image || "/avatar.svg"}
             preview={preview}
-            uploading={uploading}
+            uploading={uploadPhotoMutation.isPending || deletePhotoMutation.isPending}
             onClick={handlePhotoClick}
             onFileChange={handleFileChange}
             onRemove={handleRemovePhoto}
             fileInputRef={fileInputRef as React.RefObject<HTMLInputElement>}
             onImageError={handleImageError}
           />
-          <Button className="w-full mt-8" variant="outline" onClick={() => setEditOpen(true)}>
+          <Button className="w-full mt-8" variant="outline" onClick={handleOpenEdit}>
             Edit Profile
           </Button>
         </ProfileCard>
         <EditProfileDialog
           open={editOpen}
-          onOpenChange={setEditOpen}
+          onOpenChange={open => open ? handleOpenEdit() : handleCloseEdit()}
           form={form}
           onChange={handleEditChange}
           onSubmit={handleEditSubmit}
-          loading={formLoading}
-          onCancel={() => setEditOpen(false)}
+          loading={updateProfileMutation.isPending}
+          onCancel={handleCloseEdit}
         />
+        {formError && (
+          <div className="text-red-600 text-sm text-center mt-2">{formError}</div>
+        )}
       </div>
     </ProtectedRoute>
   );

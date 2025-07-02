@@ -40,6 +40,7 @@ export const ProfilePhoto: React.FC<ProfilePhotoProps> = ({ src, preview, upload
           onError={onImageError}
           tabIndex={0}
           aria-label="User profile photo"
+          priority
         />
         <input
           type="file"

@@ -8,7 +8,9 @@ import { z } from "zod";
 const ProfileUpdateSchema = z.object({
   name: z.string(),
   email: z.string().email(),
-  newPassword: z.string().min(6).optional(),
+  newPassword: z.string().optional().refine(val => !val || val.length >= 6, {
+    message: "New password must be at least 6 characters long",
+  }),
   currentPassword: z.string().min(1),
 });
 
