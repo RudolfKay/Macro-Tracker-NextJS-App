@@ -74,14 +74,17 @@ export function Dashboard() {
 
   // Calculate totals
   const totals = foodEntries.reduce(
-    (acc, entry) => ({
-      protein: acc.protein + entry.protein,
-      carbs: acc.carbs + entry.carbs,
-      fat: acc.fat + entry.fat,
-      calories: acc.calories + entry.calories,
-    }),
+    (acc, entry) => {
+      const units = entry.units ?? 1;
+      return {
+        protein: acc.protein + entry.protein * units,
+        carbs: acc.carbs + entry.carbs * units,
+        fat: acc.fat + entry.fat * units,
+        calories: acc.calories + entry.calories * units,
+      };
+    },
     { protein: 0, carbs: 0, fat: 0, calories: 0 },
-  )
+  );
 
   // Save macro goals
   const handleSaveGoals = async () => {
