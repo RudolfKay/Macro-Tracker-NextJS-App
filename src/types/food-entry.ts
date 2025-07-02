@@ -11,6 +11,7 @@ export interface FoodEntry {
   time: string;
   date: string;
   createdAt: string;
+  units?: number;
 }
 
 import { z } from "zod";
@@ -23,6 +24,7 @@ export const FoodEntrySchema = z.object({
   calories: z.number().min(0),
   time: z.string(),
   date: z.string(),
+  units: z.number().min(1).optional(),
 });
 
 export type FoodEntryInput = z.infer<typeof FoodEntrySchema>; 

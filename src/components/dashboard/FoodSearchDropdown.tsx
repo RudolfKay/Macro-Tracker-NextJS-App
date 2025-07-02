@@ -31,6 +31,7 @@ export const FoodSearchDropdown: React.FC<FoodSearchDropdownProps> = ({
   const [searchError, setSearchError] = useState<string | null>(null)
   const [showDropdown, setShowDropdown] = useState(false)
   const [hasSearched, setHasSearched] = useState(false)
+  const [selectedProduct, setSelectedProduct] = useState<any | null>(null)
 
   const handleSearchFood = async () => {
     if (!value.trim()) return
@@ -59,15 +60,36 @@ export const FoodSearchDropdown: React.FC<FoodSearchDropdownProps> = ({
     }
   }
 
+  const getMacroValue = (val: any) => {
+    const num = Number(val)
+    if (isNaN(num)) return ""
+    return num.toFixed(2)
+  }
+
   const handleSelectResult = (product: any) => {
-    onSelect({
+    setSelectedProduct(product)
+    // Return macros per 100g
+    const macros100g = {
       name: product.product_name || value,
-      protein: product.nutriments?.proteins_100g?.toString() || "",
-      carbs: product.nutriments?.carbohydrates_100g?.toString() || "",
-      fat: product.nutriments?.fat_100g?.toString() || "",
-      calories: product.nutriments?.["energy-kcal_100g"]?.toString() || "",
-    })
+      protein: getMacroValue(product.nutriments?.proteins_100g),
+      carbs: getMacroValue(product.nutriments?.carbohydrates_100g),
+      fat: getMacroValue(product.nutriments?.fat_100g),
+      calories: getMacroValue(product.nutriments?.["energy-kcal_100g"]),
+    }
+    onSelect(macros100g)
     setShowDropdown(false)
+  }
+
+  // Extract product weight info
+  let productWeight = "Unknown"
+  if (selectedProduct) {
+    if (selectedProduct.product_quantity) {
+      productWeight = `${selectedProduct.product_quantity}g`
+    } else if (selectedProduct.quantity) {
+      productWeight = selectedProduct.quantity
+    } else if (selectedProduct.serving_size) {
+      productWeight = selectedProduct.serving_size
+    }
   }
 
   return (
@@ -82,6 +104,7 @@ export const FoodSearchDropdown: React.FC<FoodSearchDropdownProps> = ({
               onChange(e)
               setShowDropdown(false)
               setHasSearched(false)
+              setSelectedProduct(null)
             }}
             placeholder={placeholder}
             required

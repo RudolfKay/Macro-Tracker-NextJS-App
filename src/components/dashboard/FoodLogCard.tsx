@@ -35,6 +35,31 @@ export const FoodLogCard: React.FC<FoodLogCardProps> = ({
   const [editFood, setEditFood] = useState({ name: "", protein: "", carbs: "", fat: "", calories: "" })
   const [editError, setEditError] = useState<string | null>(null)
   const [isUpdating, setIsUpdating] = useState(false)
+  const [units, setUnits] = useState(1)
+  const [editUnits, setEditUnits] = useState(1)
+
+  const handleIncrementUnits = () => setUnits(u => u + 1)
+  const handleDecrementUnits = () => setUnits(u => (u > 1 ? u - 1 : 1))
+  const handleUnitsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = Math.max(1, Number(e.target.value) || 1)
+    setUnits(val)
+  }
+  const handleEditIncrementUnits = () => setEditUnits(u => u + 1)
+  const handleEditDecrementUnits = () => setEditUnits(u => (u > 1 ? u - 1 : 1))
+  const handleEditUnitsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = Math.max(1, Number(e.target.value) || 1)
+    setEditUnits(val)
+  }
+  const getTotal = (val: string) => {
+    const num = Number(val)
+    if (isNaN(num)) return ""
+    return (num * units).toFixed(2)
+  }
+  const getEditTotal = (val: string) => {
+    const num = Number(val)
+    if (isNaN(num)) return ""
+    return (num * editUnits).toFixed(2)
+  }
 
   const handleAddFood = async () => {
     if (
@@ -53,6 +78,7 @@ export const FoodLogCard: React.FC<FoodLogCardProps> = ({
       carbs: Number(newFood.carbs),
       fat: Number(newFood.fat),
       calories: Number(newFood.calories),
+      units,
       time: new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
       date: currentDate,
     })
@@ -91,6 +117,7 @@ export const FoodLogCard: React.FC<FoodLogCardProps> = ({
       carbs: Number(editFood.carbs),
       fat: Number(editFood.fat),
       calories: Number(editFood.calories),
+      units: editUnits,
       time: editingEntry!.time,
       date: currentDate,
       createdAt: editingEntry!.createdAt,
@@ -132,6 +159,7 @@ export const FoodLogCard: React.FC<FoodLogCardProps> = ({
                 onChange={e => setNewFood({ ...newFood, name: e.target.value })}
                 onSelect={macros => setNewFood(macros)}
               />
+              <div className="text-xs text-muted-foreground mt-2 mb-1">Macros shown are <b>per 100g</b>.</div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <DashboardFormField
                   label="Protein (g)"
@@ -174,6 +202,43 @@ export const FoodLogCard: React.FC<FoodLogCardProps> = ({
                   required
                 />
               </div>
+              <div className="flex items-center gap-2 mt-2 mb-2">
+                <label className="flex items-center gap-1 text-xs text-muted-foreground">
+                  Units:
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    className="h-6 w-6 p-0 ml-1"
+                    onClick={handleDecrementUnits}
+                    aria-label="Decrease units"
+                    disabled={units <= 1}
+                  >
+                    –
+                  </Button>
+                  <input
+                    type="number"
+                    min={1}
+                    value={units}
+                    onChange={handleUnitsChange}
+                    className="w-12 px-1 py-0.5 border rounded text-center text-xs bg-white dark:bg-neutral-900 border-emerald-300 dark:border-emerald-800"
+                    aria-label="Number of 100g units"
+                    style={{ MozAppearance: 'textfield' }}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    className="h-6 w-6 p-0"
+                    onClick={handleIncrementUnits}
+                    aria-label="Increase units"
+                  >
+                    +
+                  </Button>
+                  <span className="ml-1">x 100g</span>
+                </label>
+                <span className="text-xs text-muted-foreground ml-4"><b>Total for {units * 100}g:</b> P: {getTotal(newFood.protein)}g, C: {getTotal(newFood.carbs)}g, F: {getTotal(newFood.fat)}g, {getTotal(newFood.calories)} cal</span>
+              </div>
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setIsAddingFood(false)}>
@@ -196,7 +261,7 @@ export const FoodLogCard: React.FC<FoodLogCardProps> = ({
                 {editError}
               </div>
             )}
-            <div className="grid gap-4 py-4">
+            <div className="grid gap-2 py-4">
               <DashboardFormField
                 label="Food Name"
                 id="edit-food-name"
@@ -205,6 +270,7 @@ export const FoodLogCard: React.FC<FoodLogCardProps> = ({
                 placeholder="e.g., Chicken Breast (200g)"
                 required
               />
+              <div className="text-xs text-muted-foreground mt-2 mb-1">Macros shown are <b>per 100g</b>.</div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <DashboardFormField
                   label="Protein (g)"
@@ -247,6 +313,43 @@ export const FoodLogCard: React.FC<FoodLogCardProps> = ({
                   required
                 />
               </div>
+              <div className="flex items-center gap-2 mt-2 mb-2">
+                <label className="flex items-center gap-1 text-xs text-muted-foreground">
+                  Units:
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    className="h-6 w-6 p-0 ml-1"
+                    onClick={handleEditDecrementUnits}
+                    aria-label="Decrease units"
+                    disabled={editUnits <= 1}
+                  >
+                    –
+                  </Button>
+                  <input
+                    type="number"
+                    min={1}
+                    value={editUnits}
+                    onChange={handleEditUnitsChange}
+                    className="w-12 px-1 py-0.5 border rounded text-center text-xs bg-white dark:bg-neutral-900 border-emerald-300 dark:border-emerald-800"
+                    aria-label="Number of 100g units"
+                    style={{ MozAppearance: 'textfield' }}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    className="h-6 w-6 p-0"
+                    onClick={handleEditIncrementUnits}
+                    aria-label="Increase units"
+                  >
+                    +
+                  </Button>
+                  <span className="ml-1">x 100g</span>
+                </label>
+                <span className="text-xs text-muted-foreground ml-4"><b>Total for {editUnits * 100}g:</b> P: {getEditTotal(editFood.protein)}g, C: {getEditTotal(editFood.carbs)}g, F: {getEditTotal(editFood.fat)}g, {getEditTotal(editFood.calories)} cal</span>
+              </div>
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setEditingEntry(null)}>
@@ -275,7 +378,10 @@ export const FoodLogCard: React.FC<FoodLogCardProps> = ({
                     {entry.name === "Unknown" ? (
                       <span className="italic text-muted-foreground" aria-label="Unknown food entry">Unknown</span>
                     ) : (
-                      <h4 className="font-medium">{entry.name}</h4>
+                      <h4 className="font-medium flex items-center gap-2">
+                        {entry.name}
+                        <span className="text-xs text-muted-foreground">x {entry.units ?? 1}</span>
+                      </h4>
                     )}
                   </div>
                   <div className="flex gap-4 mt-1 text-sm text-muted-foreground">
@@ -283,6 +389,9 @@ export const FoodLogCard: React.FC<FoodLogCardProps> = ({
                     <span>C: {entry.carbs}g</span>
                     <span>F: {entry.fat}g</span>
                     <span>{entry.calories} cal</span>
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    <b>Total:</b> P: {(Number(entry.protein) * (entry.units ?? 1)).toFixed(2)}g, C: {(Number(entry.carbs) * (entry.units ?? 1)).toFixed(2)}g, F: {(Number(entry.fat) * (entry.units ?? 1)).toFixed(2)}g, {(Number(entry.calories) * (entry.units ?? 1)).toFixed(2)} cal
                   </div>
                 </div>
                 <div className="flex gap-2">

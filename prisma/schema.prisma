@@ -86,4 +86,5 @@ model FoodEntry {
   time      String
   date      DateTime
   createdAt DateTime @default(now())
+  units     Int      @default(1)
 }
