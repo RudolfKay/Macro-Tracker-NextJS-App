@@ -271,7 +271,7 @@ export default function Home() {
               <h2 className="text-2xl sm:text-3xl md:text-4xl/tight drop-shadow-lg">
                 Ready to transform your nutrition?
               </h2>
-              <p className="max-w-[600px] text-base sm:text-lg md:text-xl text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+              <p className="max-w-[600px] text-base sm:text-lg text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                 Join thousands of users who have already improved their health and fitness with MacroTrack.
               </p>
             </div>

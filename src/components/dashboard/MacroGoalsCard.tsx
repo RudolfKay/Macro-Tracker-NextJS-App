@@ -46,10 +46,10 @@ export const MacroGoalsCard = ({
             Edit Goals
           </Button>
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent aria-describedby="macro-goals-description">
           <DialogHeader>
             <DialogTitle>Edit Macro Goals</DialogTitle>
-            <DialogDescription>Update your daily macro and calorie targets</DialogDescription>
+            <DialogDescription className="sr-only" id="macro-goals-description">Update your daily macro and calorie targets</DialogDescription>
           </DialogHeader>
 
           {formError && (
