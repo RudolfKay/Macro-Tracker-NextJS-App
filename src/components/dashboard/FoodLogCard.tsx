@@ -7,6 +7,7 @@ import { Plus, Utensils, Trash2, Edit2 } from "lucide-react"
 import React, { useState } from "react"
 import type { FoodEntry } from "@/types/food-entry"
 import { DashboardFormField } from "@/components/dashboard/DashboardFormField"
+import { FoodSearchDropdown } from "@/components/dashboard/FoodSearchDropdown"
 
 type FoodLogCardProps = {
   foodEntries: FoodEntry[]
@@ -125,14 +126,11 @@ export const FoodLogCard: React.FC<FoodLogCardProps> = ({
                 {formError}
               </div>
             )}
-            <div className="grid gap-4 py-4">
-              <DashboardFormField
-                label="Food Name"
-                id="food-name"
+            <div className="grid gap-4 py-2">
+              <FoodSearchDropdown
                 value={newFood.name}
                 onChange={e => setNewFood({ ...newFood, name: e.target.value })}
-                placeholder="e.g., Chicken Breast (200g)"
-                required
+                onSelect={macros => setNewFood(macros)}
               />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <DashboardFormField
