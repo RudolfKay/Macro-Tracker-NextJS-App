@@ -32,6 +32,12 @@ export const FoodSearchDropdown: React.FC<FoodSearchDropdownProps> = ({
   const [showDropdown, setShowDropdown] = useState(false)
   const [hasSearched, setHasSearched] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
+  const [hasMore, setHasMore] = useState(true)
+  const [totalResults, setTotalResults] = useState<number | null>(null)
+
+  const PAGE_SIZE = 15;
 
   const handleSearchFood = async () => {
     if (!value.trim()) return
@@ -39,26 +45,71 @@ export const FoodSearchDropdown: React.FC<FoodSearchDropdownProps> = ({
     setSearchError(null)
     setShowDropdown(false)
     setHasSearched(true)
+    setCurrentPage(1)
+    setHasMore(true)
+    setTotalResults(null)
     try {
-      const res = await fetch(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(value)}&search_simple=1&action=process&json=1&page_size=15`)
+      const res = await fetch(`/api/food-search?query=${encodeURIComponent(value)}&page=1`)
       const data = await res.json()
       if (data.products && data.products.length > 0) {
-        setSearchResults(data.products.slice(0, 15))
+        setSearchResults(data.products)
         setShowDropdown(true)
         setSearchError(null)
+        setCurrentPage(1)
+        setTotalResults(data.total)
+        setHasMore(data.products.length < data.total)
       } else {
         setSearchResults([])
         setShowDropdown(false)
         setSearchError(`No results found for "${value}".`)
+        setHasMore(false)
       }
     } catch (err) {
       setSearchError("Error searching food database.")
       setSearchResults([])
       setShowDropdown(false)
+      setHasMore(false)
     } finally {
       setIsSearching(false)
     }
   }
+
+  const loadMoreResults = async () => {
+    if (isLoadingMore || !hasMore) return;
+    setIsLoadingMore(true);
+    try {
+      const nextPage = currentPage + 1;
+      const res = await fetch(`/api/food-search?query=${encodeURIComponent(value)}&page=${nextPage}`)
+      const data = await res.json()
+      if (data.products && data.products.length > 0) {
+        setSearchResults(prev => [...prev, ...data.products])
+        setCurrentPage(nextPage)
+        setHasMore((prevResults => prevResults.length + data.products.length < data.total)([...searchResults, ...data.products]))
+      } else {
+        setHasMore(false)
+      }
+    } catch (err) {
+      setHasMore(false)
+    } finally {
+      setIsLoadingMore(false)
+    }
+  }
+
+  // Infinite scroll handler
+  const handleDropdownScroll = (e: React.UIEvent<HTMLUListElement>) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+    if (scrollHeight - scrollTop - clientHeight < 32 && hasMore && !isLoadingMore) {
+      loadMoreResults();
+    }
+  }
+
+  // Reset results when value changes
+  React.useEffect(() => {
+    setSearchResults([])
+    setCurrentPage(1)
+    setHasMore(true)
+    setTotalResults(null)
+  }, [value])
 
   const getMacroValue = (val: any) => {
     const num = Number(val)
@@ -128,7 +179,11 @@ export const FoodSearchDropdown: React.FC<FoodSearchDropdownProps> = ({
         </Button>
       </div>
       {showDropdown && searchResults.length > 0 && (
-        <ul className="absolute z-30 mt-1 w-full bg-white dark:bg-neutral-900 border border-emerald-300 dark:border-emerald-800 rounded shadow-lg max-h-56 overflow-y-auto" role="listbox">
+        <ul
+          className="absolute z-30 mt-1 w-full bg-white dark:bg-neutral-900 border border-emerald-300 dark:border-emerald-800 rounded shadow-lg max-h-56 overflow-y-auto"
+          role="listbox"
+          onScroll={handleDropdownScroll}
+        >
           {searchResults.map((product, idx) => (
             <li
               key={product.id || idx}
@@ -146,6 +201,14 @@ export const FoodSearchDropdown: React.FC<FoodSearchDropdownProps> = ({
               )}
             </li>
           ))}
+          {isLoadingMore && (
+            <li className="flex justify-center py-2">
+              <Loader2 className="h-4 w-4 animate-spin text-emerald-500" />
+            </li>
+          )}
+          {!hasMore && searchResults.length > 0 && (
+            <li className="text-center text-xs text-muted-foreground py-2">No more results</li>
+          )}
         </ul>
       )}
       {hasSearched && searchError && !isSearching && (
