@@ -2,6 +2,8 @@ import React, { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { DashboardFormField } from "@/components/dashboard/DashboardFormField"
 import { Search, Loader2 } from "lucide-react"
+import { useFoodSearch } from "@/hooks/useFoodSearch"
+import type { FoodProduct } from "@/types/food-search"
 
 type Macros = {
   name: string
@@ -26,89 +28,41 @@ export const FoodSearchDropdown: React.FC<FoodSearchDropdownProps> = ({
   placeholder = "e.g., Chicken Breast (200g)",
   className = "",
 }) => {
-  const [searchResults, setSearchResults] = useState<any[]>([])
-  const [isSearching, setIsSearching] = useState(false)
-  const [searchError, setSearchError] = useState<string | null>(null)
+  const {
+    results,
+    loading,
+    error,
+    search,
+    reset,
+    setValue,
+    total,
+  } = useFoodSearch()
   const [showDropdown, setShowDropdown] = useState(false)
-  const [hasSearched, setHasSearched] = useState(false)
-  const [selectedProduct, setSelectedProduct] = useState<any | null>(null)
-  const [currentPage, setCurrentPage] = useState(1)
-  const [isLoadingMore, setIsLoadingMore] = useState(false)
-  const [hasMore, setHasMore] = useState(true)
-  const [totalResults, setTotalResults] = useState<number | null>(null)
-
-  const PAGE_SIZE = 15;
+  const [selectedProduct, setSelectedProduct] = useState<FoodProduct | null>(null)
+  const [visibleCount, setVisibleCount] = useState(15)
+  const PAGE_SIZE = 15
 
   const handleSearchFood = async () => {
-    if (!value.trim()) return
-    setIsSearching(true)
-    setSearchError(null)
     setShowDropdown(false)
-    setHasSearched(true)
-    setCurrentPage(1)
-    setHasMore(true)
-    setTotalResults(null)
-    try {
-      const res = await fetch(`/api/food-search?query=${encodeURIComponent(value)}&page=1`)
-      const data = await res.json()
-      if (data.products && data.products.length > 0) {
-        setSearchResults(data.products)
-        setShowDropdown(true)
-        setSearchError(null)
-        setCurrentPage(1)
-        setTotalResults(data.total)
-        setHasMore(data.products.length < data.total)
-      } else {
-        setSearchResults([])
-        setShowDropdown(false)
-        setSearchError(`No results found for "${value}".`)
-        setHasMore(false)
-      }
-    } catch (err) {
-      setSearchError("Error searching food database.")
-      setSearchResults([])
-      setShowDropdown(false)
-      setHasMore(false)
-    } finally {
-      setIsSearching(false)
-    }
+    setSelectedProduct(null)
+    setVisibleCount(PAGE_SIZE)
+    setValue(value)
+    await search()
+    setShowDropdown(true)
   }
 
-  const loadMoreResults = async () => {
-    if (isLoadingMore || !hasMore) return;
-    setIsLoadingMore(true);
-    try {
-      const nextPage = currentPage + 1;
-      const res = await fetch(`/api/food-search?query=${encodeURIComponent(value)}&page=${nextPage}`)
-      const data = await res.json()
-      if (data.products && data.products.length > 0) {
-        setSearchResults(prev => [...prev, ...data.products])
-        setCurrentPage(nextPage)
-        setHasMore((prevResults => prevResults.length + data.products.length < data.total)([...searchResults, ...data.products]))
-      } else {
-        setHasMore(false)
-      }
-    } catch (err) {
-      setHasMore(false)
-    } finally {
-      setIsLoadingMore(false)
-    }
-  }
-
-  // Infinite scroll handler
   const handleDropdownScroll = (e: React.UIEvent<HTMLUListElement>) => {
-    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
-    if (scrollHeight - scrollTop - clientHeight < 32 && hasMore && !isLoadingMore) {
-      loadMoreResults();
+    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget
+    if (scrollHeight - scrollTop - clientHeight < 32 && visibleCount < (results?.length || 0)) {
+      setVisibleCount(count => Math.min(count + PAGE_SIZE, results.length))
     }
   }
 
-  // Reset results when value changes
   React.useEffect(() => {
-    setSearchResults([])
-    setCurrentPage(1)
-    setHasMore(true)
-    setTotalResults(null)
+    reset()
+    setVisibleCount(PAGE_SIZE)
+    setShowDropdown(false)
+    setSelectedProduct(null)
   }, [value])
 
   const getMacroValue = (val: any) => {
@@ -117,9 +71,8 @@ export const FoodSearchDropdown: React.FC<FoodSearchDropdownProps> = ({
     return num.toFixed(2)
   }
 
-  const handleSelectResult = (product: any) => {
+  const handleSelectResult = (product: FoodProduct) => {
     setSelectedProduct(product)
-    // Return macros per 100g
     const macros100g = {
       name: product.product_name || value,
       protein: getMacroValue(product.nutriments?.proteins_100g),
@@ -154,7 +107,6 @@ export const FoodSearchDropdown: React.FC<FoodSearchDropdownProps> = ({
             onChange={e => {
               onChange(e)
               setShowDropdown(false)
-              setHasSearched(false)
               setSelectedProduct(null)
             }}
             placeholder={placeholder}
@@ -167,24 +119,24 @@ export const FoodSearchDropdown: React.FC<FoodSearchDropdownProps> = ({
           size="icon"
           className="h-[40px] w-[40px] min-w-[40px] ml-2 flex items-center justify-center"
           onClick={handleSearchFood}
-          disabled={isSearching || !value.trim()}
+          disabled={loading || !value.trim()}
           tabIndex={0}
           aria-label="Search food database"
         >
-          {isSearching ? (
+          {loading ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
             <Search className="h-4 w-4" />
           )}
         </Button>
       </div>
-      {showDropdown && searchResults.length > 0 && (
+      {showDropdown && results.length > 0 && (
         <ul
           className="absolute z-30 mt-1 w-full bg-white dark:bg-neutral-900 border border-emerald-300 dark:border-emerald-800 rounded shadow-lg max-h-56 overflow-y-auto"
           role="listbox"
           onScroll={handleDropdownScroll}
         >
-          {searchResults.map((product, idx) => (
+          {results.slice(0, visibleCount).map((product, idx) => (
             <li
               key={product.id || idx}
               className="px-3 py-2 cursor-pointer hover:bg-emerald-100 dark:hover:bg-emerald-800 text-sm"
@@ -201,18 +153,10 @@ export const FoodSearchDropdown: React.FC<FoodSearchDropdownProps> = ({
               )}
             </li>
           ))}
-          {isLoadingMore && (
-            <li className="flex justify-center py-2">
-              <Loader2 className="h-4 w-4 animate-spin text-emerald-500" />
-            </li>
-          )}
-          {!hasMore && searchResults.length > 0 && (
-            <li className="text-center text-xs text-muted-foreground py-2">No more results</li>
-          )}
         </ul>
       )}
-      {hasSearched && searchError && !isSearching && (
-        <div className="text-xs text-red-600 mt-1">{searchError}</div>
+      {error && !loading && (
+        <div className="text-xs text-red-600 mt-1">{error}</div>
       )}
     </div>
   )
