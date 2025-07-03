@@ -1,10 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import type { FoodEntry } from "@/types/food-entry";
 import {
   fetchFoodEntries,
   addFoodEntry,
   updateFoodEntry,
   deleteFoodEntry,
-  FoodEntry,
 } from '@/api/foodEntry';
 
 export function useFoodEntries(date: string) {

@@ -86,4 +86,15 @@ model FoodEntry {
   time      String
   date      DateTime
   createdAt DateTime @default(now())
+  units     Int      @default(1)
+}
+
+model FoodCache {
+  id        String   @id @default(uuid())
+  query     String
+  page      Int
+  results   Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([query, page])
 }

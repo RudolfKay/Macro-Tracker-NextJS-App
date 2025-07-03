@@ -35,7 +35,7 @@ export const SignupRedirectButton: React.FC<SignupRedirectButtonProps> = ({
       className={className}
       aria-label={ariaLabel || (isAuthenticated ? "Go to Dashboard" : "Sign up")}
     >
-      <Link href={href} tabIndex={0}>
+      <Link href={href}>
         {children}
         {icon ? <span className="ml-2">{icon}</span> : null}
       </Link>

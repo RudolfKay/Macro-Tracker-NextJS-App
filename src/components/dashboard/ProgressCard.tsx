@@ -3,13 +3,8 @@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { TrendingUp } from "lucide-react"
-
-interface MacroGoals {
-  protein: number
-  carbs: number
-  fat: number
-  calories: number
-}
+import type { MacroGoal } from "@/types/macro-goal";
+type MacroGoals = Pick<MacroGoal, 'protein' | 'carbs' | 'fat' | 'calories'>;
 
 interface ProgressCardProps {
   totals: MacroGoals
@@ -18,7 +13,7 @@ interface ProgressCardProps {
 }
 
 export const ProgressCard = ({ totals, macroGoal, getPercentageDisplay }: ProgressCardProps) => (
-  <Card className="border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10">
+  <Card className="border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10 p-4 sm:p-6">
     <CardHeader>
       <CardTitle className="flex items-center gap-2">
         <TrendingUp className="h-5 w-5 text-emerald-500" />
@@ -30,7 +25,7 @@ export const ProgressCard = ({ totals, macroGoal, getPercentageDisplay }: Progre
     <CardContent className="space-y-4">
       {/* Protein */}
       <div>
-        <div className="flex justify-between text-sm mb-2">
+        <div className="flex justify-between text-xs sm:text-sm mb-2">
           <span>
             Protein: {totals.protein}g / {macroGoal?.protein ?? 0}g
           </span>
@@ -38,13 +33,13 @@ export const ProgressCard = ({ totals, macroGoal, getPercentageDisplay }: Progre
         </div>
         <Progress
           value={macroGoal?.protein ? Math.min((totals.protein / macroGoal.protein) * 100, 100) : 0}
-          className="h-2"
+          className="h-2 sm:h-2.5"
         />
       </div>
 
       {/* Carbs */}
       <div>
-        <div className="flex justify-between text-sm mb-2">
+        <div className="flex justify-between text-xs sm:text-sm mb-2">
           <span>
             Carbs: {totals.carbs}g / {macroGoal?.carbs ?? 0}g
           </span>
@@ -52,13 +47,13 @@ export const ProgressCard = ({ totals, macroGoal, getPercentageDisplay }: Progre
         </div>
         <Progress
           value={macroGoal?.carbs ? Math.min((totals.carbs / macroGoal.carbs) * 100, 100) : 0}
-          className="h-2"
+          className="h-2 sm:h-2.5"
         />
       </div>
 
       {/* Fat */}
       <div>
-        <div className="flex justify-between text-sm mb-2">
+        <div className="flex justify-between text-xs sm:text-sm mb-2">
           <span>
             Fat: {totals.fat}g / {macroGoal?.fat ?? 0}g
           </span>
@@ -66,13 +61,13 @@ export const ProgressCard = ({ totals, macroGoal, getPercentageDisplay }: Progre
         </div>
         <Progress
           value={macroGoal?.fat ? Math.min((totals.fat / macroGoal.fat) * 100, 100) : 0}
-          className="h-2"
+          className="h-2 sm:h-2.5"
         />
       </div>
 
       {/* Calories */}
       <div>
-        <div className="flex justify-between text-sm mb-2">
+        <div className="flex justify-between text-xs sm:text-sm mb-2">
           <span>
             Calories: {totals.calories} / {macroGoal?.calories ?? 0}
           </span>
@@ -80,7 +75,7 @@ export const ProgressCard = ({ totals, macroGoal, getPercentageDisplay }: Progre
         </div>
         <Progress
           value={macroGoal?.calories ? Math.min((totals.calories / macroGoal.calories) * 100, 100) : 0}
-          className="h-2"
+          className="h-2 sm:h-2.5"
         />
       </div>
     </CardContent>

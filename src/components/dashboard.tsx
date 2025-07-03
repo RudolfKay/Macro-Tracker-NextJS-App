@@ -8,9 +8,12 @@ import { DatePickerPopover } from "@/components/dashboard/DatePickerPopover"
 import { MacroGoalsCard } from "@/components/dashboard/MacroGoalsCard"
 import { ProgressCard } from "@/components/dashboard/ProgressCard"
 import { FoodLogCard } from "@/components/dashboard/FoodLogCard"
+import { useToast } from "@/components/ui/use-toast"
+import { showApiErrorToast } from "@/lib/utils"
 
 export function Dashboard() {
   const router = useRouter()
+  const { toast } = useToast()
 
   // Use today's date in YYYY-MM-DD format
   const [currentDate, setCurrentDate] = useState(() => {
@@ -60,16 +63,28 @@ export function Dashboard() {
     }
   }, [macroGoal])
 
+  useEffect(() => {
+    if (macroGoalError) {
+      showApiErrorToast(toast, macroGoalError, "Failed to load macro goals.")
+    }
+    if (foodError) {
+      showApiErrorToast(toast, foodError, "Failed to load food entries.")
+    }
+  }, [macroGoalError, foodError, toast])
+
   // Calculate totals
   const totals = foodEntries.reduce(
-    (acc, entry) => ({
-      protein: acc.protein + entry.protein,
-      carbs: acc.carbs + entry.carbs,
-      fat: acc.fat + entry.fat,
-      calories: acc.calories + entry.calories,
-    }),
+    (acc, entry) => {
+      const units = entry.units ?? 1;
+      return {
+        protein: acc.protein + entry.protein * units,
+        carbs: acc.carbs + entry.carbs * units,
+        fat: acc.fat + entry.fat * units,
+        calories: acc.calories + entry.calories * units,
+      };
+    },
     { protein: 0, carbs: 0, fat: 0, calories: 0 },
-  )
+  );
 
   // Save macro goals
   const handleSaveGoals = async () => {
@@ -106,13 +121,13 @@ export function Dashboard() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto p-6 space-y-6">
-        <div className="flex items-center justify-between">
+      <div className="container mx-auto p-2 sm:p-4 md:p-6 space-y-4 sm:space-y-6">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold">Dashboard</h1>
-            <p className="text-muted-foreground">Track your daily macro intake</p>
+            <h1 className="text-2xl sm:text-3xl font-bold">Dashboard</h1>
+            <p className="text-sm sm:text-base text-muted-foreground">Track your daily macro intake</p>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             <DatePickerPopover currentDate={currentDate} setCurrentDate={setCurrentDate} />
           </div>
         </div>

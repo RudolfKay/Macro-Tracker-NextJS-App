@@ -1,13 +1,4 @@
-export interface MacroGoal {
-  id: string;
-  protein: number;
-  carbs: number;
-  fat: number;
-  calories: number;
-  createdAt: string;
-  updatedAt: string;
-  isActive: boolean;
-}
+import type { MacroGoal, MacroGoalInput } from "@/types/macro-goal";
 
 export async function fetchMacroGoal(): Promise<MacroGoal | null> {
   const res = await fetch('/api/macro-goal');
@@ -15,7 +6,7 @@ export async function fetchMacroGoal(): Promise<MacroGoal | null> {
   return data.goal ?? null;
 }
 
-export async function setMacroGoal(goal: Omit<MacroGoal, 'id' | 'createdAt' | 'updatedAt' | 'isActive'>) {
+export async function setMacroGoal(goal: MacroGoalInput) {
   const res = await fetch('/api/macro-goal', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

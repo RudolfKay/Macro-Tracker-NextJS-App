@@ -1,14 +1,4 @@
-export interface FoodEntry {
-  id: string;
-  name: string;
-  protein: number;
-  carbs: number;
-  fat: number;
-  calories: number;
-  time: string;
-  date: string;
-  createdAt: string;
-}
+import type { FoodEntry, FoodEntryInput } from "@/types/food-entry";
 
 export async function fetchFoodEntries(date: string): Promise<FoodEntry[]> {
   const res = await fetch(`/api/food-entry?date=${date}`);
@@ -16,7 +6,7 @@ export async function fetchFoodEntries(date: string): Promise<FoodEntry[]> {
   return data.entries ?? [];
 }
 
-export async function addFoodEntry(entry: Omit<FoodEntry, 'id' | 'createdAt'>) {
+export async function addFoodEntry(entry: FoodEntryInput) {
   const res = await fetch('/api/food-entry', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

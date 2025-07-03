@@ -7,8 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Eye, EyeOff } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
+import { showApiErrorToast } from "@/lib/utils";
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({
@@ -17,8 +18,8 @@ const LoginForm = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
   const router = useRouter();
+  const { toast } = useToast();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -31,7 +32,6 @@ const LoginForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError("");
 
     try {
       const result = await signIn("credentials", {
@@ -41,7 +41,7 @@ const LoginForm = () => {
       });
 
       if (result?.error) {
-        setError("Invalid email or password");
+        showApiErrorToast(toast, "Invalid email or password");
       } else {
         // Check if user is authenticated
         const session = await getSession();
@@ -50,7 +50,7 @@ const LoginForm = () => {
         }
       }
     } catch (err) {
-      setError("An error occurred during login");
+      showApiErrorToast(toast, err, "An error occurred during login");
     } finally {
       setIsLoading(false);
     }
@@ -66,12 +66,6 @@ const LoginForm = () => {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-          {error && (
-            <Alert variant="destructive">
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
-          
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
