@@ -45,7 +45,7 @@ const AdminPanel = () => {
       setEditOpen(false);
       queryClient.invalidateQueries({ queryKey: ['admin-users'] });
     },
-    onError: (err: any) => {
+    onError: (err: unknown) => {
       showApiErrorToast(toast, err, "Failed to update user");
     },
     onSettled: () => setFormLoading(false),
@@ -59,7 +59,7 @@ const AdminPanel = () => {
       setDeleteOpen(false);
       queryClient.invalidateQueries({ queryKey: ['admin-users'] });
     },
-    onError: (err: any) => {
+    onError: (err: unknown) => {
       showApiErrorToast(toast, err, "Failed to delete user");
     },
     onSettled: () => setDeleteLoading(false),
@@ -72,7 +72,6 @@ const AdminPanel = () => {
       return;
     }
     // No need to manually load users; useQuery handles it
-    // eslint-disable-next-line
   }, [session, status, router]);
 
   const handleEditClick = (user: User) => {

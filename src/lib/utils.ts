@@ -19,10 +19,10 @@ export const showApiErrorToast = (
   let message = fallbackMessage;
   if (typeof error === "string") message = error;
   else if (error && typeof error === "object") {
-    if ("message" in error && typeof (error as any).message === "string") {
-      message = (error as any).message;
-    } else if ("error" in error && typeof (error as any).error === "string") {
-      message = (error as any).error;
+    if ("message" in error && typeof (error as { message: string }).message === "string") {
+      message = (error as { message: string }).message;
+    } else if ("error" in error && typeof (error as { error: string }).error === "string") {
+      message = (error as { error: string }).error;
     }
   }
   toast({

@@ -17,7 +17,7 @@ export const ProgressCard = ({ totals, macroGoal, getPercentageDisplay }: Progre
     <CardHeader>
       <CardTitle className="flex items-center gap-2">
         <TrendingUp className="h-5 w-5 text-emerald-500" />
-        Today's Progress
+        Today&apos;s Progress
       </CardTitle>
       <CardDescription>How close you are to your daily goals</CardDescription>
     </CardHeader>

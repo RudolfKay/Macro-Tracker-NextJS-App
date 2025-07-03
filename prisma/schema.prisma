@@ -27,6 +27,7 @@ model User {
   sessions     Session[]
   macroGoals   MacroGoal[]
   foodEntries  FoodEntry[]
+  emailVerified     DateTime?
 }
 
 model Account {

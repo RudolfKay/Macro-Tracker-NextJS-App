@@ -3,10 +3,9 @@
 import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { BarChart3, Eye, EyeOff } from "lucide-react"
+import { Eye, EyeOff } from "lucide-react"
 import { signIn } from "next-auth/react"
 import { Button } from "@/components/ui/button"
-import { Alert, AlertDescription } from "@/components/ui/alert"
 import { AuthCard } from "@/components/auth/AuthCard"
 import { FormField } from "@/components/auth/FormField"
 import { useToast } from "@/components/ui/use-toast"
@@ -21,14 +20,12 @@ export default function RegisterPage() {
   })
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [success, setSuccess] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const { toast } = useToast()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setSuccess("")
     setIsLoading(true)
 
     if (formData.password !== formData.confirmPassword) {
@@ -55,7 +52,7 @@ export default function RegisterPage() {
       if (!response.ok) {
         showApiErrorToast(toast, data.error || "Registration failed")
       } else {
-        setSuccess("Registration successful! Logging you in...");
+        setIsLoading(false)
         const loginResult = await signIn("credentials", {
           email: formData.email,
           password: formData.password,

@@ -10,7 +10,7 @@ import { z } from "zod";
 
 const prisma = new PrismaClient();
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   const session = await getServerSession(authOptions);
   if (!session || session.user.role !== 'ADMIN') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -76,7 +76,7 @@ export async function DELETE(request: NextRequest) {
     const filePath = path.join(process.cwd(), "public", user.profileImage.startsWith("/") ? user.profileImage.slice(1) : user.profileImage);
     try {
       await fs.unlink(filePath);
-    } catch (err) {
+    } catch {
       // Ignore if file does not exist or cannot be deleted
     }
   }

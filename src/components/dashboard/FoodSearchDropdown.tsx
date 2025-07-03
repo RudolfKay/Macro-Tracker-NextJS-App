@@ -35,16 +35,13 @@ export const FoodSearchDropdown: React.FC<FoodSearchDropdownProps> = ({
     search,
     reset,
     setValue,
-    total,
   } = useFoodSearch()
   const [showDropdown, setShowDropdown] = useState(false)
-  const [selectedProduct, setSelectedProduct] = useState<FoodProduct | null>(null)
   const [visibleCount, setVisibleCount] = useState(15)
   const PAGE_SIZE = 15
 
   const handleSearchFood = async () => {
     setShowDropdown(false)
-    setSelectedProduct(null)
     setVisibleCount(PAGE_SIZE)
     setValue(value)
     await search()
@@ -62,17 +59,15 @@ export const FoodSearchDropdown: React.FC<FoodSearchDropdownProps> = ({
     reset()
     setVisibleCount(PAGE_SIZE)
     setShowDropdown(false)
-    setSelectedProduct(null)
   }, [value])
 
-  const getMacroValue = (val: any) => {
-    const num = Number(val)
+  const getMacroValue = (val: number | string | undefined) => {
+    const num = typeof val === 'number' ? val : Number(val)
     if (isNaN(num)) return ""
     return num.toFixed(2)
   }
 
   const handleSelectResult = (product: FoodProduct) => {
-    setSelectedProduct(product)
     const macros100g = {
       name: product.product_name || value,
       protein: getMacroValue(product.nutriments?.proteins_100g),
@@ -84,17 +79,7 @@ export const FoodSearchDropdown: React.FC<FoodSearchDropdownProps> = ({
     setShowDropdown(false)
   }
 
-  // Extract product weight info
-  let productWeight = "Unknown"
-  if (selectedProduct) {
-    if (selectedProduct.product_quantity) {
-      productWeight = `${selectedProduct.product_quantity}g`
-    } else if (selectedProduct.quantity) {
-      productWeight = selectedProduct.quantity
-    } else if (selectedProduct.serving_size) {
-      productWeight = selectedProduct.serving_size
-    }
-  }
+  // Extract product weight info (removed unused variable)
 
   return (
     <div className={`relative ${className}`}>
@@ -107,7 +92,6 @@ export const FoodSearchDropdown: React.FC<FoodSearchDropdownProps> = ({
             onChange={e => {
               onChange(e)
               setShowDropdown(false)
-              setSelectedProduct(null)
             }}
             placeholder={placeholder}
             required

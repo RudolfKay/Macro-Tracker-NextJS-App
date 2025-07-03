@@ -5,7 +5,6 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import ProtectedRoute from "@/components/auth/protected-route";
 import { useToast } from "@/components/ui/use-toast";
-import { useRouter } from "next/navigation";
 import { ProfileCard } from "@/components/profile/ProfileCard";
 import { ProfilePhoto } from "@/components/profile/ProfilePhoto";
 import { EditProfileDialog } from "@/components/profile/EditProfileDialog";
@@ -17,7 +16,6 @@ const ProfilePage = () => {
   const [preview, setPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
-  const router = useRouter();
   const [editOpen, setEditOpen] = useState(false);
   const [form, setForm] = useState({
     name: "",
@@ -25,7 +23,6 @@ const ProfilePage = () => {
     newPassword: "",
     currentPassword: "",
   });
-  const [isDefaultAvatar, setIsDefaultAvatar] = useState(false);
   const queryClient = useQueryClient();
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -48,7 +45,7 @@ const ProfilePage = () => {
       await update();
       queryClient.invalidateQueries();
     },
-    onError: (err: any) => {
+    onError: (err: unknown) => {
       showApiErrorToast(toast, err, "Failed to upload photo");
     },
   });
@@ -66,7 +63,7 @@ const ProfilePage = () => {
       await update();
       queryClient.invalidateQueries();
     },
-    onError: (err: any) => {
+    onError: (err: unknown) => {
       showApiErrorToast(toast, err, "Failed to remove photo");
     },
   });
@@ -88,7 +85,7 @@ const ProfilePage = () => {
       await update();
       queryClient.invalidateQueries();
     },
-    onError: (err: any) => {
+    onError: (err: unknown) => {
       showApiErrorToast(toast, err, "Failed to update profile. Current password is required to confirm changes.");
     },
   });
@@ -103,12 +100,6 @@ const ProfilePage = () => {
     }
   }, [session?.user]);
 
-  useEffect(() => {
-    // Determine if the current image is the default avatar
-    const hasCustomImage = !!(preview || (session?.user as any)?.profileImage || session?.user?.image);
-    setIsDefaultAvatar(!hasCustomImage);
-  }, [preview, session?.user]);
-
   if (!session?.user) return null;
 
   const handlePhotoClick = () => {
@@ -117,14 +108,12 @@ const ProfilePage = () => {
 
   const handleImageError = (event: React.SyntheticEvent<HTMLImageElement>) => {
     event.currentTarget.src = "/avatar.svg";
-    setIsDefaultAvatar(true);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setPreview(URL.createObjectURL(file));
-      setIsDefaultAvatar(false);
       uploadPhotoMutation.mutate(file);
     }
   };
