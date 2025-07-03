@@ -80,7 +80,15 @@ npm install
   - Password: `admin123`
 
   > **Note:**
-  > This script is intended for local development and onboarding. In production, you should run migrations and seeds manually and with care. Do NOT run seeds automatically on every migration in production, as this can lead to accidental data overwrites or security issues.
+  > The seeding is handled using Prisma's native TypeScript support. You can also run the seed directly with:
+  > ```bash
+  > npx prisma db seed
+  > ```
+  > This is the same command used in CI/CD pipelines.
+  >
+  > **Warning:**
+  > The seed script is intended for local development and onboarding. In production, you should run migrations and seeds manually and with care.  
+  > **Do NOT run seeds automatically on every migration in production,** as this can lead to accidental data overwrites or security issues.
 
 ### 5. Start the development server
 ```bash
@@ -120,3 +128,21 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## License
 MIT
+
+---
+
+## Database Seeding
+
+This project uses [Prisma's native TypeScript seeding](https://www.prisma.io/docs/guides/database/seed-database) for database initialization.
+
+- To seed the database manually, run:
+  ```bash
+  npx prisma db seed
+  ```
+- This command is also used in automated CI/CD workflows.
+
+The seed script will create a default admin user if one does not already exist.
+
+> **Warning:**  
+> The seed script is for local development and onboarding only.  
+> In production, always review and run seeds manually to avoid accidental data loss or security issues.
