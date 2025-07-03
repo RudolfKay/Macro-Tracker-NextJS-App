@@ -1,7 +1,5 @@
 "use client"
 import { useState, useEffect } from "react"
-import { signOut } from "next-auth/react"
-import { useRouter } from "next/navigation"
 import { useMacroGoal } from "@/hooks/useMacroGoal"
 import { useFoodEntries } from "@/hooks/useFoodEntries"
 import { DatePickerPopover } from "@/components/dashboard/DatePickerPopover"
@@ -12,7 +10,6 @@ import { useToast } from "@/components/ui/use-toast"
 import { showApiErrorToast } from "@/lib/utils"
 
 export function Dashboard() {
-  const router = useRouter()
   const { toast } = useToast()
 
   // Use today's date in YYYY-MM-DD format
@@ -103,12 +100,6 @@ export function Dashboard() {
     const percent = Math.round((current / goal) * 100)
     if (!isFinite(percent) || isNaN(percent)) return "-"
     return `${percent}%`
-  }
-
-  // Handle logout
-  const handleLogout = async () => {
-    await signOut({ redirect: false })
-    router.push("/login")
   }
 
   // Loading and error states

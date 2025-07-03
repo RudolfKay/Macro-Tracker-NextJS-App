@@ -1,4 +1,6 @@
-import NextAuth from "next-auth";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import type { NextAuth } from "next-auth";
+import NextAuth, { DefaultSession, User as NextAuthUser } from "next-auth";
 
 declare module "next-auth" {
   interface Session {
@@ -8,7 +10,8 @@ declare module "next-auth" {
       email?: string | null;
       image?: string | null;
       role?: string | null;
-    };
+      profileImage?: string | null;
+    } & DefaultSession["user"];
   }
 
   interface User {
@@ -17,6 +20,7 @@ declare module "next-auth" {
     email?: string | null;
     image?: string | null;
     role?: string | null;
+    profileImage?: string | null;
   }
 }
 

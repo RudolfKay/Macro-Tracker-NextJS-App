@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
   }
 
   // Prepare update data
-  const updateData: any = { name, email };
+  const updateData: { name: string; email: string; password?: string } = { name, email };
   if (newPassword && newPassword.length >= 6) {
     updateData.password = await bcrypt.hash(newPassword, 10);
   }

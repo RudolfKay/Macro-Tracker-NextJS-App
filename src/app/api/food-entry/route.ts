@@ -42,10 +42,8 @@ export async function POST(request: NextRequest) {
   if (!result.success) {
     return NextResponse.json({ error: "All food entry values must be zero or positive numbers", details: result.error.errors }, { status: 400 });
   }
-  let { name, protein, carbs, fat, calories, time, date, units } = result.data;
-  if (!name || name.trim() === "") {
-    name = "Unknown";
-  }
+  const { name: rawName, protein, carbs, fat, calories, time, date, units } = result.data;
+  const name = !rawName || rawName.trim() === "" ? "Unknown" : rawName;
   const entry = await prisma.foodEntry.create({
     data: {
       userId: session.user.id,
@@ -76,13 +74,11 @@ export async function PUT(request: NextRequest) {
   if (!result.success) {
     return NextResponse.json({ error: "All food entry values must be zero or positive numbers.", details: result.error.errors }, { status: 400 });
   }
-  let { name, protein, carbs, fat, calories, time, units } = result.data;
-  if (!name || name.trim() === "") {
-    name = "Unknown";
-  }
+  const { name: rawName2, protein: protein2, carbs: carbs2, fat: fat2, calories: calories2, time: time2, units: units2 } = result.data;
+  const name2 = !rawName2 || rawName2.trim() === "" ? "Unknown" : rawName2;
   const entry = await prisma.foodEntry.update({
     where: { id: body.id },
-    data: { name, protein, carbs, fat, calories, time, units: typeof units === 'number' && units > 0 ? units : 1 },
+    data: { name: name2, protein: protein2, carbs: carbs2, fat: fat2, calories: calories2, time: time2, units: typeof units2 === 'number' && units2 > 0 ? units2 : 1 },
   });
   return NextResponse.json({ entry });
 }
