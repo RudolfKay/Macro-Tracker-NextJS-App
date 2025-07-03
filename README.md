@@ -80,13 +80,13 @@ npm install
   - Password: `admin123`
 
   > **Note:**
-  > The seeding is handled using Prisma's native TypeScript support. You can also run the seed directly with:
+  > The seeding is handled using Prisma's native TypeScript support via [tsx](https://github.com/esbuild-kit/tsx). You can also run the seed directly with:
   > ```bash
   > npx prisma db seed
   > ```
   > This is the same command used in CI/CD pipelines.
-  >
-  > **Warning:**
+
+  **Warning:**
   > The seed script is intended for local development and onboarding. In production, you should run migrations and seeds manually and with care.  
   > **Do NOT run seeds automatically on every migration in production,** as this can lead to accidental data overwrites or security issues.
 
@@ -133,7 +133,7 @@ MIT
 
 ## Database Seeding
 
-This project uses [Prisma's native TypeScript seeding](https://www.prisma.io/docs/guides/database/seed-database) for database initialization.
+This project uses [Prisma's native TypeScript seeding](https://www.prisma.io/docs/guides/database/seed-database) for database initialization, powered by [tsx](https://github.com/esbuild-kit/tsx).
 
 - To seed the database manually, run:
   ```bash

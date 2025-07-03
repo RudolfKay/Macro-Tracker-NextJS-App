@@ -67,7 +67,7 @@ jobs:
 
       - name: Type check
         run: npm run typecheck
-        continue-on-error: true # Remove this if you want to fail on type errors
+        continue-on-error: true # Remove if workflow should fail on type errors.
 
       - name: Generate Prisma client
         run: npx prisma generate
