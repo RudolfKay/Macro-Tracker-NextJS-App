@@ -66,11 +66,11 @@ jobs:
         run: npm run typecheck
         continue-on-error: true # Remove this if you want to fail on type errors
 
-      - name: Prisma generate
+      - name: Generate Prisma client
         run: npx prisma generate
 
-      - name: Prisma migrate status
-        run: npx prisma migrate status
+      - name: Apply Prisma migrations
+        run: npx prisma migrate deploy
 
       - name: Build app
         run: npm run build
