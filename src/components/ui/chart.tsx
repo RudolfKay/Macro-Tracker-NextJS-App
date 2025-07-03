@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import * as RechartsPrimitive from "recharts"
+import type { TooltipProps } from 'recharts';
 
 import { cn } from "@/lib/utils"
 
@@ -69,7 +70,7 @@ ChartContainer.displayName = "Chart"
 
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(
-    ([_, config]) => config.theme || config.color
+    ([, config]) => config.theme || config.color
   )
 
   if (!colorConfig.length) {
@@ -84,7 +85,8 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
             ([theme, prefix]) => `
 ${prefix} [data-chart=${id}] {
 ${colorConfig
-  .map(([key, itemConfig]) => {
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+  .map(([key, itemConfig]: [string, any]) => {
     const color =
       itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ||
       itemConfig.color
@@ -104,41 +106,49 @@ const ChartTooltip = RechartsPrimitive.Tooltip
 
 const ChartTooltipContent = React.forwardRef<
   HTMLDivElement,
-  React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
-    React.ComponentProps<"div"> & {
-      hideLabel?: boolean
-      hideIndicator?: boolean
-      indicator?: "line" | "dot" | "dashed"
-      nameKey?: string
-      labelKey?: string
-    }
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+  TooltipProps<any, any> & React.ComponentProps<"div"> & {
+    hideLabel?: boolean
+    hideIndicator?: boolean
+    indicator?: "line" | "dot" | "dashed"
+    nameKey?: string
+    labelKey?: string
+  }
 >(
   (
-    {
+    props,
+    ref
+  ) => {
+    const {
       active,
-      payload,
       className,
       indicator = "dot",
       hideLabel = false,
       hideIndicator = false,
-      label,
       labelFormatter,
       labelClassName,
       formatter,
       color,
       nameKey,
       labelKey,
-    },
-    ref
-  ) => {
-    const { config } = useChart()
+    } = props;
+    const payload = React.useMemo(
+      () => (props as { payload?: unknown[] }).payload ?? [],
+      [props]
+    );
+    const safePayload = React.useMemo(
+      () => (Array.isArray(payload) ? (payload as Record<string, unknown>[]) : []),
+      [payload]
+    );
+    const label = (props as { label?: string }).label ?? "";
+    const { config } = useChart();
 
     const tooltipLabel = React.useMemo(() => {
-      if (hideLabel || !payload?.length) {
+      if (hideLabel || !safePayload.length) {
         return null
       }
 
-      const [item] = payload
+      const [item] = safePayload;
       const key = `${labelKey || item.dataKey || item.name || "value"}`
       const itemConfig = getPayloadConfigFromPayload(config, item, key)
       const value =
@@ -149,7 +159,8 @@ const ChartTooltipContent = React.forwardRef<
       if (labelFormatter) {
         return (
           <div className={cn("font-medium", labelClassName)}>
-            {labelFormatter(value, payload)}
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+            {labelFormatter(value, safePayload as any[])}
           </div>
         )
       }
@@ -158,22 +169,22 @@ const ChartTooltipContent = React.forwardRef<
         return null
       }
 
-      return <div className={cn("font-medium", labelClassName)}>{value}</div>
+      return <div className={cn("font-medium", labelClassName)}>{typeof value === "string" || typeof value === "number" ? value : null}</div>
     }, [
       label,
       labelFormatter,
-      payload,
+      safePayload,
       hideLabel,
       labelClassName,
       config,
       labelKey,
     ])
 
-    if (!active || !payload?.length) {
+    if (!active || !safePayload.length) {
       return null
     }
 
-    const nestLabel = payload.length === 1 && indicator !== "dot"
+    const nestLabel = safePayload.length === 1 && indicator !== "dot"
 
     return (
       <div
@@ -185,21 +196,22 @@ const ChartTooltipContent = React.forwardRef<
       >
         {!nestLabel ? tooltipLabel : null}
         <div className="grid gap-1.5">
-          {payload.map((item, index) => {
+          {safePayload.map((item: Record<string, unknown>, index: number) => {
             const key = `${nameKey || item.name || item.dataKey || "value"}`
             const itemConfig = getPayloadConfigFromPayload(config, item, key)
-            const indicatorColor = color || item.payload.fill || item.color
+            const indicatorColor = color || (item.payload as { fill?: string })?.fill || item.color
 
             return (
               <div
-                key={item.dataKey}
+                key={item.dataKey as string}
                 className={cn(
                   "flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5 [&>svg]:text-muted-foreground",
                   indicator === "dot" && "items-center"
                 )}
               >
                 {formatter && item?.value !== undefined && item.name ? (
-                  formatter(item.value, item.name, item, index, item.payload)
+                  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+                  formatter(item.value, item.name, item, index, item.payload as any[])
                 ) : (
                   <>
                     {itemConfig?.icon ? (
@@ -235,14 +247,14 @@ const ChartTooltipContent = React.forwardRef<
                       <div className="grid gap-1.5">
                         {nestLabel ? tooltipLabel : null}
                         <span className="text-muted-foreground">
-                          {itemConfig?.label || item.name}
+                          {typeof itemConfig?.label === "string" || typeof itemConfig?.label === "number" ? itemConfig?.label : null}
                         </span>
                       </div>
-                      {item.value && (
+                      {typeof item.value === "string" || typeof item.value === "number" ? (
                         <span className="font-mono font-medium tabular-nums text-foreground">
                           {item.value.toLocaleString()}
                         </span>
-                      )}
+                      ) : null}
                     </div>
                   </>
                 )}
@@ -260,20 +272,29 @@ const ChartLegend = RechartsPrimitive.Legend
 
 const ChartLegendContent = React.forwardRef<
   HTMLDivElement,
-  React.ComponentProps<"div"> &
-    Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> & {
-      hideIcon?: boolean
-      nameKey?: string
-    }
+  React.ComponentProps<"div"> & {
+    hideIcon?: boolean
+    nameKey?: string
+  }
 >(
   (
-    { className, hideIcon = false, payload, verticalAlign = "bottom", nameKey },
+    props,
     ref
   ) => {
-    const { config } = useChart()
+    const { className, hideIcon = false, nameKey } = props;
+    const payload = React.useMemo(
+      () => (props as { payload?: unknown[] }).payload ?? [],
+      [props]
+    );
+    const safePayload = React.useMemo(
+      () => (Array.isArray(payload) ? (payload as Record<string, unknown>[]) : []),
+      [payload]
+    );
+    const verticalAlign = (props as { verticalAlign?: string }).verticalAlign ?? "bottom";
+    const { config } = useChart();
 
-    if (!payload?.length) {
-      return null
+    if (!safePayload.length) {
+      return null;
     }
 
     return (
@@ -285,28 +306,23 @@ const ChartLegendContent = React.forwardRef<
           className
         )}
       >
-        {payload.map((item) => {
+        {safePayload.map((item: Record<string, unknown>) => {
           const key = `${nameKey || item.dataKey || "value"}`
           const itemConfig = getPayloadConfigFromPayload(config, item, key)
 
           return (
             <div
-              key={item.value}
+              key={item.value as string}
               className={cn(
                 "flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground"
               )}
             >
               {itemConfig?.icon && !hideIcon ? (
                 <itemConfig.icon />
-              ) : (
-                <div
-                  className="h-2 w-2 shrink-0 rounded-[2px]"
-                  style={{
-                    backgroundColor: item.color,
-                  }}
-                />
-              )}
-              {itemConfig?.label}
+              ) : null}
+              <span className="font-medium">
+                {typeof itemConfig?.label === "string" || typeof itemConfig?.label === "number" ? itemConfig?.label : null}
+              </span>
             </div>
           )
         })}

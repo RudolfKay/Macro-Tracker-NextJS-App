@@ -23,8 +23,12 @@ export function useFoodSearch() {
       setTotal(data.total);
       setFromCache(!!data.fromCache);
       setError(null);
-    } catch (err: any) {
-      setError(err.message || "Error searching food database.");
+    } catch (err: unknown) {
+      let message = "Error searching food database.";
+      if (typeof err === "object" && err !== null && "message" in err && typeof (err as { message?: unknown }).message === "string") {
+        message = (err as { message: string }).message;
+      }
+      setError(message);
       setResults([]);
       setTotal(null);
       setFromCache(false);
