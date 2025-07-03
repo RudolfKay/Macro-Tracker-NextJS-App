@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "FoodEntry" ADD COLUMN     "units" INTEGER NOT NULL DEFAULT 1;

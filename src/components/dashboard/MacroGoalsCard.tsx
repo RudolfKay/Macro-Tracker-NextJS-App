@@ -5,13 +5,8 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger } from "@/components/ui/dialog"
 import { Edit2, Target } from "lucide-react"
 import { DashboardFormField } from "@/components/dashboard/DashboardFormField"
-
-interface MacroGoals {
-  protein: number
-  carbs: number
-  fat: number
-  calories: number
-}
+import type { MacroGoal } from "@/types/macro-goal";
+type MacroGoals = Pick<MacroGoal, 'protein' | 'carbs' | 'fat' | 'calories'>;
 
 interface MacroGoalsCardProps {
   macroGoal: MacroGoals | null | undefined
@@ -34,8 +29,8 @@ export const MacroGoalsCard = ({
   isSettingMacroGoal,
   formError,
 }: MacroGoalsCardProps) => (
-  <Card className="border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10">
-    <CardHeader className="flex flex-row items-center justify-between">
+  <Card className="border border-emerald-300 dark:border-emerald-800 shadow-lg shadow-emerald-900/10 p-4 sm:p-6">
+    <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
       <div>
         <CardTitle className="flex items-center gap-2">
           <Target className="h-5 w-5 text-emerald-500" />
@@ -51,10 +46,10 @@ export const MacroGoalsCard = ({
             Edit Goals
           </Button>
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent aria-describedby="macro-goals-description">
           <DialogHeader>
             <DialogTitle>Edit Macro Goals</DialogTitle>
-            <DialogDescription>Update your daily macro and calorie targets</DialogDescription>
+            <DialogDescription className="sr-only" id="macro-goals-description">Update your daily macro and calorie targets</DialogDescription>
           </DialogHeader>
 
           {formError && (
@@ -64,7 +59,7 @@ export const MacroGoalsCard = ({
           )}
 
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <DashboardFormField
                 label="Protein (g)"
                 id="protein-goal"
@@ -83,8 +78,6 @@ export const MacroGoalsCard = ({
                 min={0}
                 required
               />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
               <DashboardFormField
                 label="Fat (g)"
                 id="fat-goal"
