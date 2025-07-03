@@ -176,7 +176,7 @@ const ProfilePage = () => {
       <div className="mt-16 flex flex-col items-center justify-center bg-background p-2 sm:p-4">
         <ProfileCard name={session.user.name || ""} email={session.user.email || ""}>
           <ProfilePhoto
-            src={(session.user as any)?.profileImage || session.user.image || "/avatar.svg"}
+            src="/api/profile/photo"
             preview={preview}
             uploading={uploadPhotoMutation.isPending || deletePhotoMutation.isPending}
             onClick={handlePhotoClick}
