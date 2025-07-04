@@ -8,7 +8,7 @@ import { signIn } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { AuthCard } from "@/components/auth/AuthCard"
 import { FormField } from "@/components/auth/FormField"
-import { useToast } from "@/components/ui/use-toast"
+import { useToast } from "@/hooks/use-toast"
 import { showApiErrorToast } from "@/lib/utils"
 
 export default function RegisterPage() {

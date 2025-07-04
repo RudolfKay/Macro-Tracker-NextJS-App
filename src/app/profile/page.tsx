@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import ProtectedRoute from "@/components/auth/protected-route";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { ProfileCard } from "@/components/profile/ProfileCard";
 import { ProfilePhoto } from "@/components/profile/ProfilePhoto";
 import { EditProfileDialog } from "@/components/profile/EditProfileDialog";
