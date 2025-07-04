@@ -10,7 +10,8 @@
     "lint": "next lint",
     "setup:db": "npx prisma migrate dev && npm run prisma:seed",
     "typecheck": "tsc --noEmit",
-    "test": "vitest"
+    "test": "vitest",
+    "postinstall": "prisma generate"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
