@@ -6,7 +6,7 @@ import { DatePickerPopover } from "@/components/dashboard/DatePickerPopover"
 import { MacroGoalsCard } from "@/components/dashboard/MacroGoalsCard"
 import { ProgressCard } from "@/components/dashboard/ProgressCard"
 import { FoodLogCard } from "@/components/dashboard/FoodLogCard"
-import { useToast } from "@/components/ui/use-toast"
+import { useToast } from "@/hooks/use-toast"
 import { showApiErrorToast } from "@/lib/utils"
 
 export function Dashboard() {
