@@ -146,3 +146,5 @@ The seed script will create a default admin user if one does not already exist.
 > **Warning:**  
 > The seed script is for local development and onboarding only.  
 > In production, always review and run seeds manually to avoid accidental data loss or security issues.
+
+![CI](https://github.com/${{ github.repository }}/actions/workflows/ci-workflow.yml/badge.svg)
