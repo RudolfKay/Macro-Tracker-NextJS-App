@@ -16,16 +16,17 @@ type EditUserDialogProps = {
   onCancel: () => void;
 };
 
-export const EditUserDialog: React.FC<EditUserDialogProps> = ({ open, onOpenChange, form, onChange, onRoleChange, onSubmit, loading, onCancel }) => (
-  <Dialog open={open} onOpenChange={onOpenChange}>
-    <DialogContent className="max-w-xs sm:max-w-md w-full p-4 sm:p-6" aria-describedby="edit-user-description">
-      <DialogHeader>
-        <DialogTitle>Edit User</DialogTitle>
-        <DialogDescription className="sr-only" id="edit-user-description">
-          Edit user details below. Name, email, and role are required fields.
-        </DialogDescription>
-      </DialogHeader>
-      {form?.name && (
+export const EditUserDialog: React.FC<EditUserDialogProps> = ({ open, onOpenChange, form, onChange, onRoleChange, onSubmit, loading, onCancel }) => {
+  const isSaveDisabled = !form.name.trim() || !form.email.trim() || loading;
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-xs sm:max-w-md w-full p-4 sm:p-6" aria-describedby="edit-user-description">
+        <DialogHeader>
+          <DialogTitle>Edit User</DialogTitle>
+          <DialogDescription className="sr-only" id="edit-user-description">
+            Edit user details below. Name, email, and role are required fields.
+          </DialogDescription>
+        </DialogHeader>
         <form onSubmit={onSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="name">Name</Label>
@@ -54,10 +55,10 @@ export const EditUserDialog: React.FC<EditUserDialogProps> = ({ open, onOpenChan
             <DialogClose asChild>
               <Button type="button" variant="ghost" disabled={loading} onClick={onCancel}>Cancel</Button>
             </DialogClose>
-            <Button type="submit" disabled={loading}>{loading ? "Saving..." : "Save Changes"}</Button>
+            <Button type="submit" disabled={isSaveDisabled}>{loading ? "Saving..." : "Save Changes"}</Button>
           </DialogFooter>
         </form>
-      )}
-    </DialogContent>
-  </Dialog>
-); 
+      </DialogContent>
+    </Dialog>
+  );
+}; 
