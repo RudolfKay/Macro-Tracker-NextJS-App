@@ -43,6 +43,7 @@ jobs:
 
     env:
       DATABASE_URL: "postgresql://user:password@localhost:5432/db"
+      DIRECT_URL: "postgresql://user:password@localhost:5432/db"
 
     steps:
       - name: Display workflow context info
