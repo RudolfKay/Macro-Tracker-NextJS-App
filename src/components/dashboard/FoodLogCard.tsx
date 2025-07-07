@@ -4,7 +4,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger } from "@/components/ui/dialog"
 import { Plus, Utensils, Trash2, Edit2 } from "lucide-react"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import type { FoodEntry } from "@/types/food-entry"
 import { DashboardFormField } from "@/components/dashboard/DashboardFormField"
 import { FoodSearchDropdown } from "@/components/dashboard/FoodSearchDropdown"
@@ -37,6 +37,13 @@ export const FoodLogCard: React.FC<FoodLogCardProps> = ({
   const [isUpdating, setIsUpdating] = useState(false)
   const [units, setUnits] = useState(1)
   const [editUnits, setEditUnits] = useState(1)
+
+  useEffect(() => {
+    if (isAddingFood) {
+      setUnits(1);
+      setNewFood({ name: "", protein: "", carbs: "", fat: "", calories: "" });
+    }
+  }, [isAddingFood]);
 
   const handleIncrementUnits = () => setUnits(u => u + 1)
   const handleDecrementUnits = () => setUnits(u => (u > 1 ? u - 1 : 1))
@@ -95,6 +102,7 @@ export const FoodLogCard: React.FC<FoodLogCardProps> = ({
       fat: entry.fat.toString(),
       calories: entry.calories.toString(),
     })
+    setEditUnits(entry.units ?? 1);
     setEditError(null)
   }
 
