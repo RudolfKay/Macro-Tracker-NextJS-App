@@ -2,13 +2,28 @@
 
 A modern, full-stack macro-tracking application built with Next.js, React, TypeScript, Prisma ORM, PostgreSQL, NextAuth.js, and styled with TailwindCSS and Shadcn UI components.
 
-## Features
+## 🚀 Live Demo
+
+Try the app instantly, no setup required:  
+👉 [MacroTrack](https://macrotrack.vercel.app)
+
+##  Features
+
 - User authentication (NextAuth.js)
 - Profile management with photo upload
 - Set and track daily macro goals (protein, carbs, fat, calories)
 - Log food entries with nutritional breakdown
 - Dashboard with progress visualization
 - Responsive, accessible UI
+
+## CI/CD & Deployment
+
+- Automated with **GitHub Actions** (CI/CD).
+- Auto-deployed to [Vercel](https://vercel.com/).
+- **No need to set up CI/CD or Vercel to run locally.**
+
+![CI](https://github.com/RudolfKay/Macro-Tracker-NextJS-App/actions/workflows/ci-workflow.yml/badge.svg)
+![CD](https://github.com/RudolfKay/Macro-Tracker-NextJS-App/actions/workflows/cd-workflow.yml/badge.svg)
 
 ---
 
@@ -37,6 +52,7 @@ graph TD
 
 Before you begin, ensure you have the following installed:
 
+- **Git** (for cloning the repository): [Download Git](https://git-scm.com/downloads)
 - **Node.js** (v18 or higher recommended): [Download Node.js](https://nodejs.org/)
 - **npm** (comes with Node.js) or [Yarn](https://yarnpkg.com/) (optional)
 - **PostgreSQL** (v13 or higher recommended): [Download PostgreSQL](https://www.postgresql.org/download/)
@@ -44,6 +60,10 @@ Before you begin, ensure you have the following installed:
 ---
 
 ## Getting Started
+
+> **Note:**  
+> You can try the [live demo](https://macrotrack.vercel.app) without any setup.  
+> The instructions below are for running the app locally.
 
 ### 1. Clone the repository
 ```bash
@@ -147,4 +167,3 @@ The seed script will create a default admin user if one does not already exist.
 > The seed script is for local development and onboarding only.  
 > In production, always review and run seeds manually to avoid accidental data loss or security issues.
 
-![CI](https://github.com/RudolfKay/Macro-Tracker-NextJS-App/actions/workflows/ci-workflow.yml/badge.svg)
