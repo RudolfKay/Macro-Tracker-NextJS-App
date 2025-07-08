@@ -102,6 +102,18 @@ export function Dashboard() {
     return `${percent}%`
   }
 
+  const handleOpenEditGoals = () => {
+    if (macroGoal) {
+      setEditingGoals({
+        protein: macroGoal.protein ?? 0,
+        carbs: macroGoal.carbs ?? 0,
+        fat: macroGoal.fat ?? 0,
+        calories: macroGoal.calories ?? 0,
+      });
+    }
+    setIsEditingGoals(true);
+  };
+
   // Loading and error states
   if (isMacroGoalLoading || isFoodLoading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>
@@ -127,7 +139,13 @@ export function Dashboard() {
           editingGoals={editingGoals}
           setEditingGoals={setEditingGoals}
           isEditingGoals={isEditingGoals}
-          setIsEditingGoals={setIsEditingGoals}
+          setIsEditingGoals={(open) => {
+            if (open) {
+              handleOpenEditGoals();
+            } else {
+              setIsEditingGoals(false);
+            }
+          }}
           handleSaveGoals={handleSaveGoals}
           isSettingMacroGoal={isSettingMacroGoal}
           formError={formError}
