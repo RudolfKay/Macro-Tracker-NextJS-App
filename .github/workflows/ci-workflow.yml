@@ -76,6 +76,14 @@ jobs:
       - name: Type check with TypeScript
         run: npm run typecheck
 
+      - name: Cache Next.js build
+        uses: actions/cache@v4
+        with:
+          path: .next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-
+
       - name: Generate Prisma client
         run: npx prisma generate
 
@@ -88,11 +96,27 @@ jobs:
       - name: Seed database (create admin user)
         run: npx prisma db seed
 
+      - name: List .next directory
+        run: ls -la .next || echo ".next not found"
+
       - name: Upload Next.js build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: nextjs-build
           path: .next
-          
-      - name: Run tests
-        run: npm test 
+
+      - name: Run Vitest tests with JUnit reporter
+        run: npx vitest run --reporter=default --reporter=junit --outputFile=vitest-report.xml
+
+      - name: Upload Vitest JUnit test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: vitest-test-results
+          path: vitest-report.xml
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage/ 
