@@ -109,7 +109,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: nextjs-build
-          path: ${{ github.workspace }}/.next
+          path: ${{ github.workspace }}/.next/**
 
       - name: Run Vitest tests with JUnit reporter and coverage
         run: npx vitest run --coverage --reporter=default --reporter=junit --outputFile=vitest-report.xml
