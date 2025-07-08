@@ -96,26 +96,14 @@ jobs:
       - name: Seed database (create admin user)
         run: npx prisma db seed
 
-      - name: Show current directory
-        run: pwd
-
-      - name: List all files in workspace
-        run: ls -la
-
-      - name: List .next directory
-        run: ls -la .next || echo ".next not found"
-
       - name: Upload Next.js build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: nextjs-build
-          path: ${{ github.workspace }}/.next/**
+          path: .next
 
       - name: Run Vitest tests with JUnit reporter and coverage
         run: npx vitest run --coverage --reporter=default --reporter=junit --outputFile=vitest-report.xml
-
-      - name: List coverage directory
-        run: ls -la coverage || echo "coverage not found"
 
       - name: Upload Vitest JUnit test results
         uses: actions/upload-artifact@v4
